@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: user-sport-app
+    restart: unless-stopped
+    ports:
+      - '80:80'

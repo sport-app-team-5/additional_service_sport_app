@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-stage
+    container_name: user-sport-app
+    restart: unless-stopped
+    ports:
+      - '8008:8008'
+    volumes:
+      - .:/user-sport-app
+    networks:
+      internal_net:
+        aliases:
+          - local.user-sport-app
+    depends_on:
+      - postgresql
+
+  postgresql:
+    image: postgres:15
+    container_name: postgresql
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=6565
+      - POSTGRES_DB=user_sport_app
+    networks:
+      internal_net:
+        aliases:
+          - local.postgres
+
+networks:
+  internal_net:
+    driver: bridge
+    name: internal_net
+
+volumes:
+  postgres-data:

@@ -1,0 +1,61 @@
+# Archivos y carpetas generados por el sistema operativo
+__pycache__/*
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.swp
+
+# Carpetas y archivos específicos de PyCharm
+.idea/
+
+# Carpeta específica de virtualenv o ambiente virtual
+.env
+.env.production
+.env.stage
+venv/
+env/
+
+# Archivos generados por pytest
+pytest.ini
+pytest_cache/
+
+# Archivos de registro y de configuración de Flask
+*.log
+instance/
+
+# Archivos de configuración específicos de PyCharm
+*.iml
+
+# Archivos de configuración de Visual Studio Code
+.vscode/
+
+# Archivos de caché y registros de Flask
+__pycache__/
+
+# Otros archivos y carpetas que no deben incluirse en la imagen de Docker
+*.DS_Store
+*.git
+*.gitignore
+*.dockerignore
+*.zip
+*.tar
+*.gz
+*.rar
+*.egg-info/
+*.egg
+
+# others
+test_db.db
+.coverage
+.github
+tests
+docker-compose-stage.yml
+docker-compose.yml
+Dockerfile
+Dockerfile-stage
+README.md
+alembic.ini.example
+.pytest_cache
+.env.example
+config.py
