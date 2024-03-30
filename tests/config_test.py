@@ -10,21 +10,21 @@ from sqlalchemy.orm import sessionmaker
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from app.config.db import Base, get_db
-from app.api.session_router import session_router
+from app.api.additional_services_router import third_party_router
 
 
 def start_application():
     app = FastAPI()
 
     api_v1 = APIRouter()
-    api_v1.include_router(session_router)
+    api_v1.include_router(third_party_router)
     app.include_router(api_v1)
     return app
 
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-SessionTesting = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+ThirdPartySession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
 @pytest.fixture(scope="function")
@@ -36,10 +36,10 @@ def app() -> Generator[FastAPI, Any, None]:
 
 
 @pytest.fixture(scope="function")
-def db_session(app: FastAPI) -> Generator[SessionTesting, Any, None]:
+def db_session(app: FastAPI) -> Generator[ThirdPartySession, Any, None]:
     connection = engine.connect()
     transaction = connection.begin()
-    session = SessionTesting(bind=connection)
+    session = ThirdPartySession(bind=connection)
     yield session
     session.close()
     transaction.rollback()
@@ -47,7 +47,7 @@ def db_session(app: FastAPI) -> Generator[SessionTesting, Any, None]:
 
 
 @pytest.fixture(scope="function")
-def client(app: FastAPI, db_session: SessionTesting) -> Generator[TestClient, Any, None]:
+def client(app: FastAPI, db_session: ThirdPartySession) -> Generator[TestClient, Any, None]:
     def _get_test_db():
         try:
             yield db_session
