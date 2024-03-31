@@ -6,5 +6,5 @@ from app.modules.third_party.infrastructure.factories import RepositoryFactory
 
 def test_create_object_third_party_repository():
     factory = RepositoryFactory()
-    repo = factory.create_object(ThirdPartyRepository)
+    repo = factory.create_object(ThirdPartyRepository.__class__)
     assert isinstance(repo, ThirdPartyRepositoryPostgres)

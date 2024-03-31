@@ -465,3 +465,7 @@ test_db.db
 alembic.ini.production
 alembic.ini.stage
 test_db.db-journal
+
+# SonarCloud
+.scannerwork/*
+reports/*
