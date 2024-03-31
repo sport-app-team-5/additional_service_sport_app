@@ -42,6 +42,10 @@ jobs:
         run: |
           pytest --cov=app
           python -m pytest -v --junitxml="coverage.xml"
+          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
+          for i in ${{ steps.pl.outputs.paths }}; do
+          echo $i
+          done
       - name: check coverage
         working-directory: .
         id: check-coverage

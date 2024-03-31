@@ -9,11 +9,10 @@ from sqlalchemy.exc import SQLAlchemyError
 
 @pytest.fixture
 def mock_session():
-    return ThirdParty(city_id=1, user_id=2)
+    return ThirdParty(id=1, city_id=1, user_id=2)
 
 def test_third_party_repository_update(mocker, mock_session):
     updated_city_id = 2
-    updated_third_party = ThirdParty(id=1, city_id=1, user_id=2)
     db = mocker.MagicMock(Session)
     db.query().filter().first.return_value = mock_session  # Mocking the query
     repository = ThirdPartyRepositoryPostgres()
