@@ -14,4 +14,4 @@ python-jose
 boto3
 bcrypt
 passlib
-pytest_mock-3.14.0
+pytest-mock
