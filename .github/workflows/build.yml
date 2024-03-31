@@ -21,8 +21,7 @@ jobs:
         run: |
             pip install tox
             python -m pip install --upgrade pip
-            pip install -r requirements.txt
-      - name: run tests
+            pip install -r requirements.txt      
       - name: Run tox
         run: tox -e py
       - name: SonarQube Scan
