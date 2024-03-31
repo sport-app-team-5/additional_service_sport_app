@@ -41,6 +41,7 @@ jobs:
         id: run-coverage
         run: |
           pytest --cov=app
+          python -m pytest -v --junitxml="coverage.xml"
       - name: check coverage
         working-directory: .
         id: check-coverage
