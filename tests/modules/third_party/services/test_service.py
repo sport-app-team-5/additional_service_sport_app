@@ -22,8 +22,6 @@ def create_third_party():
 def get_third_parties():
     service = ThirdPartyService()
     service._repository_factory = MockRepositoryFactory()
-
-    model = ThirdPartyRequestDTO(id=6, city_id=2, user_id=1)
     db = MockSession()
 
     assert service.get_third_parties(db) is not None
@@ -31,8 +29,6 @@ def get_third_parties():
 def get_third_party_by_id():
     service = ThirdPartyService()
     service._repository_factory = MockRepositoryFactory()
-
-    model = ThirdPartyRequestDTO(id=6, city_id=2, user_id=1)
     db = MockSession()
 
     assert service.get_third_party_by_id(6, db) is not None
