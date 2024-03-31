@@ -40,7 +40,7 @@ jobs:
         working-directory: .
         id: run-coverage
         run: |
-          pytest --cov=app          
+          pytest --cov=app
       - name: check coverage
         working-directory: .
         id: check-coverage
