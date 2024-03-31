@@ -17,7 +17,7 @@ def create_third_party():
     model = ThirdPartyRequestDTO(id=6, city_id=2, user_id=1)
     db = MockSession()
 
-    assert service.start(model, db) is not None
+    assert service.create_third_party(model, db) is not None
 
 def get_third_parties():
     service = ThirdPartyService()
@@ -26,7 +26,7 @@ def get_third_parties():
     model = ThirdPartyRequestDTO(id=6, city_id=2, user_id=1)
     db = MockSession()
 
-    assert service.get_third_parties(model, db) is not None
+    assert service.get_third_parties(db) is not None
 
 def get_third_party_by_id():
     service = ThirdPartyService()
@@ -35,4 +35,4 @@ def get_third_party_by_id():
     model = ThirdPartyRequestDTO(id=6, city_id=2, user_id=1)
     db = MockSession()
 
-    assert service.register(model, db) is not None
+    assert service.get_third_party_by_id(6, db) is not None
