@@ -19,9 +19,9 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install tox and any other packages        
         run: |
-            pip install tox
-            pip install sqlalchemy
-            python -m pip install --upgrade pip
+            python -m pip install --upgrade pip    
+            pip install sqlalchemy    
+            pip install tox                        
             pip install -r requirements.txt      
       - name: Run tox
         run: tox -e py
