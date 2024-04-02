@@ -1,4 +1,4 @@
-name: Build
+name: SonarQube
 on:
   push:    
     branches:
@@ -25,12 +25,12 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python }}
-      - name: Install tox and any other packages        
+      - name: Install tox and any other packages
         run: |
             python -m pip install --upgrade pip    
             pip install sqlalchemy    
             pip install tox                        
-            pip install -r requirements.txt      
+            pip install -r requirements.txt
     #   - name: Run tox
     #     run: tox -e py
       - name: run coverage
