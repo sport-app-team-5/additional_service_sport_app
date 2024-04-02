@@ -1,11 +1,11 @@
 name: Test coverage
+
 on:
   push:
     branches:
+      - master
       - develop
-      - main
-      - release/*
-
+      - alpha-develop
   pull_request:
     types:
       - opened
@@ -15,37 +15,43 @@ on:
       - converted_to_draft
       - ready_for_review
     branches:
+      - master
       - develop
-      - main
-      - release/*
+      - alpha-develop
 
 jobs:
-  plan-sport-app:
+  ci-test-coverage:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ 3.10 ]
+        python-version: [ 3.11 ]
     steps:
-      - uses: actions/checkout@v1
-      - name: install dependencies
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        id: install-dependencies
         working-directory: .
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-      - name: run tests
+
+      - name: Run test and coverage
         working-directory: .
-        id: run-test
-        run: pytest
-      - name: run coverage
-        working-directory: .
-        id: run-coverage
+        id: run-test-coverage
         run: |
           pytest --cov=app
-      - name: check coverage
+
+      - name: Check coverage
         working-directory: .
         id: check-coverage
         run: |
-          COVERAGE_THRESHOLD=49
+          COVERAGE_THRESHOLD=85
           coverage=$(coverage report -m | tail -n 1 | awk '{print $4}' | tr -d %)
           if [ $coverage -ge $COVERAGE_THRESHOLD ]; then
             echo "Tests coverage ($coverage%) is greater than or equal to the threshold ($COVERAGE_THRESHOLD%). Tests passed!"
