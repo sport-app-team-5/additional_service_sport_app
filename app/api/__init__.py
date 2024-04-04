@@ -1,2 +1,1 @@
-from .health_check_router import health_check_router
-from .additional_services_router import third_party_router
+from app.api.v1.private import third_party_router

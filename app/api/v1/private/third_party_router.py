@@ -11,31 +11,31 @@ from app.seedwork.presentation.jwt import oauth2_scheme
 auth_service = AuthService()
 authorized = auth_service.authorized
 third_party_router = APIRouter(
-    prefix='/third_party',
-    tags=["third_party"],
-    dependencies=[Depends(oauth2_scheme)]
+    prefix='/third_parties',
+    tags=["ThirdParty"],
+    #dependencies=[Depends(oauth2_scheme)]
 )
 
 
 @third_party_router.post("", response_model=ThirdPartyResponseDTO, status_code=status.HTTP_201_CREATED,
-                  dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_USER.code])])
-async def create_third_party(user: ThirdPartyRequestDTO, db: Session = Depends(get_db)):
-    user_service = ThirdPartyService()
-    user_created = user_service.create_third_party(user, db)
-    return user_created
+                  dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])])
+async def create_third_party(third_party: ThirdPartyRequestDTO, db: Session = Depends(get_db)):
+    third_party_service = ThirdPartyService()
+    third_party_created = third_party_service.create_third_party(third_party, db)
+    return third_party_created
 
 
 @third_party_router.get("", response_model=List[ThirdPartyResponseDTO],
-                 dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
+                 dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
 async def get_third_parties(db: Session = Depends(get_db)):
-    user_service = ThirdPartyService()
-    users = user_service.get_third_parties(db)
-    return users
+    third_party_service = ThirdPartyService()
+    third_parties = third_party_service.get_third_parties(db)
+    return third_parties
 
 
 @third_party_router.get("/{third_party_id}", response_model=ThirdPartyResponseDTO,
-                 dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
+                 dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
 async def get_third_party_by_id(third_party_id: int = Path(ge=1), db: Session = Depends(get_db)):
-    user_service = ThirdPartyService()
-    user = user_service.get_third_party_by_id(third_party_id, db)
-    return user
+    third_party_service = ThirdPartyService()
+    third_party = third_party_service.get_third_party_by_id(third_party_id, db)
+    return third_party
