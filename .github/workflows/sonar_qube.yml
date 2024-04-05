@@ -32,17 +32,17 @@ jobs:
             pip install sqlalchemy    
             pip install tox                        
             pip install -r requirements.txt
-    #   - name: Run tox
-    #     run: tox -e py
-      - name: run coverage
-        id: run-coverage
-        run: |
-          pytest --cov=app
-          python -m pytest -v --junitxml="coverage.xml"
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i
-          done
+      - name: Run tox
+        run: tox -e py
+      # - name: run coverage
+      #   id: run-coverage
+      #   run: |
+      #     pytest --cov=app
+      #     python -m pytest -v --junitxml="coverage.xml"
+      #     echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
+      #     for i in ${{ steps.pl.outputs.paths }}; do
+      #     echo $i
+      #     done
 
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
