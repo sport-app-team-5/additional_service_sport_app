@@ -58,4 +58,4 @@ README.md
 alembic.ini.example
 .pytest_cache
 .env.example
-config.py
+env.py
