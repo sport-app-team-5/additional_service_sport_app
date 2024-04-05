@@ -38,8 +38,8 @@ class TestCreateThirdPartyRouter:
         assert response.status_code == 422
         assert "detail" in response_json
 
-    def test_create_third_party_with_invalid_email(self, client, headers, third_party_seeders, third_party_data):
-        third_party_data_fail = third_party_data["email"] = "fail"
+    def test_create_third_party_with_no_city(self, client, headers, third_party_seeders, third_party_data):
+        third_party_data_fail = third_party_data["city_id"] = "fail"
         response = create_third_party(client, third_party_data_fail, headers)
         response_json = response.json()
 
@@ -63,7 +63,7 @@ class TestGetThirdPartyRouter:
 
         assert third_party.status_code == 200
         assert "id" in third_party.json()
-        assert third_party_data["email"] == third_party.json()["email"]
+        assert third_party_data["city_id"] == third_party.json()["city_id"]
 
     def test_get_third_party_with_no_found_id(self, client, headers):
         third_party_id = 4
@@ -97,15 +97,15 @@ class TestGetThirdPartiesRouter:
 
 
 def create_third_party(client, data, headers) -> Response:
-    third_party_created = client.post("/api/v1/third_parties", headers=headers, json=data)
+    third_party_created = client.post("/api/v1/aditional_service/third_parties", headers=headers, json=data)
     return third_party_created
 
 
 def get_third_party(client, third_party_id, headers) -> Response:
-    third_party = client.get(f"/api/v1/third_parties/{third_party_id}", headers=headers)
+    third_party = client.get(f"/api/v1/aditional_service/third_parties/{third_party_id}", headers=headers)
     return third_party
 
 
 def get_third_parties(client, headers) -> Response:
-    third_parties = client.get("/api/v1/third_parties", headers=headers)
+    third_parties = client.get("/api/v1/aditional_service/third_parties", headers=headers)
     return third_parties
