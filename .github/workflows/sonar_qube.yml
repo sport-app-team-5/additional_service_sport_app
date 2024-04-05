@@ -36,9 +36,11 @@ jobs:
     #     run: tox -e py
       - name: run coverage
         id: run-coverage
-        run: |
-          pytest --cov=app
-          python -m pytest -v --junitxml="coverage.xml"
+        # pytest --cov=app
+        # python -m pytest -v --junitxml="coverage.xml"
+        run: |          
+          coverage run -m pytest -rap  --junitxml coverage.xml
+          coverage xml -i 
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
           echo $i
