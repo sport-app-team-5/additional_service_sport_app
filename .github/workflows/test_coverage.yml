@@ -44,7 +44,7 @@ jobs:
         id: run-test-coverage
         run: |
           pytest --cov=app
-
+          python -m pytest -v --junitxml="coverage.xml"
       - name: Check coverage
         working-directory: .
         id: check-coverage
@@ -57,3 +57,8 @@ jobs:
             echo "Tests coverage ($coverage%) is below the threshold ($COVERAGE_THRESHOLD%). Tests failed!"
             exit 1
           fi
+      - name: SonarQube Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
