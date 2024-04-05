@@ -3,8 +3,8 @@ from app.seedwork.infrastructure.utils import get_secrets
 secrets = get_secrets()
 
 
-class Setting:
-    PROJECT_NAME: str = "User SportApp"
+class Env:
+    PROJECT_NAME: str = "Additional Service SportApp"
     PROJECT_VERSION: str = "1.0.0"
     DB_ENGINE: str = "postgresql"
 
@@ -20,8 +20,12 @@ class Setting:
         DATABASE_URL = f"{DB_ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:" \
                        f"{DB_PORT}/{DB_NAME}"
 
+        AWS_ACCESS_KEY_ID = secrets["AWS_ACCESS_KEY_ID"]
+        AWS_SECRET_ACCESS_KEY = secrets["AWS_SECRET_ACCESS_KEY"]
+        TOPIC_ARN = secrets["TOPIC_ARN"]
+
     except KeyError as e:
         raise KeyError(f"Missing {e} in secrets")
 
 
-settings = Setting
+env = Env

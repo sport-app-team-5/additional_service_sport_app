@@ -1,12 +1,11 @@
 import logging
 from fastapi import FastAPI, APIRouter
 from app import api
-from config import settings
-
+from app.config.env import env
 
 app = FastAPI()
-app.title = settings.PROJECT_NAME
-app.version = settings.PROJECT_VERSION
+app.title = env.PROJECT_NAME
+app.version = env.PROJECT_VERSION
 
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)

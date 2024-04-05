@@ -4,8 +4,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class Setting:
-    PROJECT_NAME: str = "User SportApp"
+class Env:
+    PROJECT_NAME: str = "Plan SportApp"
     PROJECT_VERSION: str = "1.0.0"
     DB_ENGINE: str = "postgresql"
 
@@ -19,6 +19,9 @@ class Setting:
     DB_NAME: str = os.getenv("DB_NAME")
     DATABASE_URL = f"{DB_ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:" \
                    f"{DB_PORT}/{DB_NAME}"
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
+    TOPIC_ARN = os.getenv('TOPIC_ARN')
 
 
-settings = Setting
+env = Env
