@@ -4,7 +4,7 @@ WORKDIR /user-sport-app
 
 COPY . .
 
-COPY app/config/env-cloud.py app/config/env.py
+COPY app/config/env_cloud.py app/config/env.py
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
