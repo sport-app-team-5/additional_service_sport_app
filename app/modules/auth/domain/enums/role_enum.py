@@ -11,3 +11,10 @@ class RoleEnum(str, Enum):
         obj._value_ = code
         obj.desc = desc
         return obj
+
+    @classmethod
+    def lookup_by_code(cls, code):
+        for member in cls.__members__.values():
+            if member.value == code:
+                return member.desc
+        return None

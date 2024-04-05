@@ -2,9 +2,9 @@ from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from app.moduls.auth.aplication.dto import TokenResponse
-from app.moduls.auth.domain.repository import AuthRepository
-from app.moduls.user.domain.entities import User
+from app.modules.auth.aplication.dto import TokenResponse
+from app.modules.auth.domain.repository import AuthRepository
+from app.modules.user.domain.entities import User
 from app.seedwork.presentation.utils import verify_password
 from app.seedwork.presentation.jwt import create_access_token
 
@@ -13,7 +13,7 @@ class AuthRepositoryPostgres(AuthRepository):
     def authenticate(self, form_data: OAuth2PasswordRequestForm, db: Session) -> TokenResponse:
         try:
             user = db.query(User).filter(User.email == form_data.username).first()
-            if not user.is_active or not verify_password(form_data.password, user.password):
+            if not user or not user.is_active or not verify_password(form_data.password, user.password):
                 raise HTTPException(status_code=400, detail="Incorrect username or password")
 
             permissions = user.role.permissions
