@@ -20,10 +20,6 @@ class Env:
         DATABASE_URL = f"{DB_ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:" \
                        f"{DB_PORT}/{DB_NAME}"
 
-        AWS_ACCESS_KEY_ID = secrets["AWS_ACCESS_KEY_ID"]
-        AWS_SECRET_ACCESS_KEY = secrets["AWS_SECRET_ACCESS_KEY"]
-        TOPIC_ARN = secrets["TOPIC_ARN"]
-
     except KeyError as e:
         raise KeyError(f"Missing {e} in secrets")
 
