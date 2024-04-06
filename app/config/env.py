@@ -10,7 +10,7 @@ class Env:
     DB_ENGINE: str = "postgresql"
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "secret")
-    ENV: str = os.getenv("ENV", "local")
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "local")
 
     DB_USER: str = os.getenv("DB_USER")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD")

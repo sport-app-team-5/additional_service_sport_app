@@ -4,13 +4,11 @@ secrets = get_secrets()
 
 
 class Env:
-    PROJECT_NAME: str = "Additional Service SportApp"
-    PROJECT_VERSION: str = "1.0.0"
     DB_ENGINE: str = "postgresql"
 
     try:
         SECRET_KEY: str = secrets["SECRET_KEY"]
-        ENV: str = secrets["ENV"]
+        ENVIRONMENT: str = secrets["ENVIRONMENT"]
 
         DB_USER: str = secrets["DB_USER"]
         DB_PASSWORD: str = secrets["DB_PASSWORD"]
