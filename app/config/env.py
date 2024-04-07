@@ -5,8 +5,6 @@ load_dotenv()
 
 
 class Env:
-    PROJECT_NAME: str = "Additional Service SportApp"
-    PROJECT_VERSION: str = "1.0.0"
     DB_ENGINE: str = "postgresql"
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "secret")
