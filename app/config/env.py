@@ -4,13 +4,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-class Setting:
-    PROJECT_NAME: str = "User SportApp"
+class Env:
+    PROJECT_NAME: str = "Additional Service SportApp"
     PROJECT_VERSION: str = "1.0.0"
     DB_ENGINE: str = "postgresql"
 
     SECRET_KEY: str = os.getenv("SECRET_KEY", "secret")
-    ENV: str = os.getenv("ENV", "local")
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "local")
 
     DB_USER: str = os.getenv("DB_USER")
     DB_PASSWORD: str = os.getenv("DB_PASSWORD")
@@ -21,4 +21,4 @@ class Setting:
                    f"{DB_PORT}/{DB_NAME}"
 
 
-settings = Setting
+env = Env
