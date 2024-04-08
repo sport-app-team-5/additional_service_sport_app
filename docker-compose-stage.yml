@@ -5,16 +5,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-stage
-    container_name: user-sport-app
+    container_name: additional-service-sport-app
     restart: unless-stopped
     ports:
-      - '8008:8008'
+      - '8001:8001'
     volumes:
-      - .:/user-sport-app
+      - .:/additional-service-sport-app
     networks:
       internal_net:
         aliases:
-          - local.user-sport-app
+          - local.additional-service-sport-app
     depends_on:
       - postgresql
 

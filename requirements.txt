@@ -13,5 +13,4 @@ email-validator
 python-jose
 boto3
 bcrypt
-passlib
-pytest-mock
+pydantic-settings

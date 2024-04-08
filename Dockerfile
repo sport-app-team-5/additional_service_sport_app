@@ -1,10 +1,10 @@
-FROM python:3.10-alpine
+FROM python:3.11-alpine
 
 WORKDIR /user-sport-app
 
 COPY . .
 
-COPY config-cloud.py config.py
+COPY app/config/env_cloud.py app/config/env.py
 
 RUN pip install --no-cache-dir --upgrade -r requirements.txt
 

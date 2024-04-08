@@ -3,14 +3,12 @@ from app.seedwork.infrastructure.utils import get_secrets
 secrets = get_secrets()
 
 
-class Setting:
-    PROJECT_NAME: str = "User SportApp"
-    PROJECT_VERSION: str = "1.0.0"
+class Env:
     DB_ENGINE: str = "postgresql"
 
     try:
         SECRET_KEY: str = secrets["SECRET_KEY"]
-        ENV: str = secrets["ENV"]
+        ENVIRONMENT: str = secrets["ENVIRONMENT"]
 
         DB_USER: str = secrets["DB_USER"]
         DB_PASSWORD: str = secrets["DB_PASSWORD"]
@@ -24,4 +22,4 @@ class Setting:
         raise KeyError(f"Missing {e} in secrets")
 
 
-settings = Setting
+env = Env
