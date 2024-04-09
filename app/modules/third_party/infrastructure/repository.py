@@ -43,7 +43,6 @@ class ThirdPartyRepositoryPostgres(ThirdPartyRepository):
         try:
 
             third_party = db.query(ThirdParty).filter(ThirdParty.id == entity_id).first()
-            print ('entity_id: ', entity_id)
             if third_party:
                 try:
                     third_party.user_id = entity.user_id

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from pydantic import ConfigDict, EmailStr, BaseModel
+from pydantic import ConfigDict, BaseModel
 
 
 @dataclass(frozen=True)

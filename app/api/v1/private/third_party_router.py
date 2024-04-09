@@ -1,10 +1,9 @@
 from typing import List
-from fastapi import APIRouter, Depends, Path, Security, status
+from fastapi import APIRouter, Depends, Path, status
 from sqlalchemy.orm import Session
 from app.config.db import get_db
 from app.modules.third_party.aplication.dto import ThirdPartyRequestDTO, ThirdPartyResponseDTO
 from app.modules.third_party.aplication.service import ThirdPartyService
-from app.seedwork.presentation.jwt import oauth2_scheme
 
 third_party_router = APIRouter(
     prefix='/third_parties',
