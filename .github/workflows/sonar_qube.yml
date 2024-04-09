@@ -36,8 +36,6 @@ jobs:
     #     run: tox -e py
       - name: run coverage
         id: run-coverage
-        # pytest --cov=app
-        # python -m pytest -v --junitxml="coverage.xml"
         run: |          
           coverage run -m pytest -rap  --junitxml coverage.xml
           coverage xml -i 

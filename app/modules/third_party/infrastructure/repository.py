@@ -31,7 +31,7 @@ class ThirdPartyRepositoryPostgres(ThirdPartyRepository):
 
     def create(self, entity: ThirdParty, db: Session) -> ThirdPartyRequestDTO:
         try:
-            third_party = ThirdParty(id = entity.id, city_id = entity.city_id, user_id = entity.user_id)            
+            third_party = ThirdParty(id = entity.id, user_id = entity.user_id)            
             db.add(third_party)
             db.commit()
             return third_party
@@ -45,10 +45,12 @@ class ThirdPartyRepositoryPostgres(ThirdPartyRepository):
             third_party = db.query(ThirdParty).filter(ThirdParty.id == entity_id).first()
             print ('entity_id: ', entity_id)
             if third_party:
-                third_party.user_id = entity.user_id
-                third_party.city_id = entity.city_id
-                db.commit()
-                return third_party
+                try:
+                    third_party.user_id = entity.user_id
+                    db.commit()
+                    return third_party
+                except Exception as e:
+                    raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="User was not provided")    
             else:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Third party not found")    
             

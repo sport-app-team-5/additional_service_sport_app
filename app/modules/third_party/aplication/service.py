@@ -17,6 +17,10 @@ class ThirdPartyService(Service):
     def create_third_party(self, third_party: ThirdPartyRequestDTO, db: Session) -> ThirdPartyResponseDTO:
         repository = self.repository_factory.create_object(ThirdPartyRepository.__class__)
         return repository.create(third_party, db)
+    
+    def update_third_party(self, third_party_id, third_party: ThirdPartyRequestDTO, db: Session) -> ThirdPartyResponseDTO:
+        repository = self.repository_factory.create_object(ThirdPartyRepository.__class__)
+        return repository.update(third_party_id, third_party, db)
 
     def get_third_parties(self, db: Session) -> List[ThirdPartyResponseDTO]:
         repository = self.repository_factory.create_object(ThirdPartyRepository.__class__)
