@@ -31,10 +31,17 @@ class ThirdPartyRepositoryPostgres(ThirdPartyRepository):
 
     def create(self, entity: ThirdParty, db: Session) -> ThirdPartyRequestDTO:
         try:
-            third_party = ThirdParty(id = entity.id, user_id = entity.user_id)            
-            db.add(third_party)
-            db.commit()
-            return third_party
+
+            third_party = db.query(ThirdParty).filter(ThirdParty.id == entity.id).first()
+
+            print('third_party: ', third_party)
+            if not third_party:
+                third_party = ThirdParty(id = entity.id, user_id = entity.user_id)            
+                db.add(third_party)
+                db.commit()
+                return third_party
+            else:
+                raise HTTPException(status_code=status.HTTP_412_PRECONDITION_FAILED, detail=str(e))    
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

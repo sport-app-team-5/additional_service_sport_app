@@ -44,9 +44,9 @@ class TestCreateThirdPartyRouter:
         assert response.status_code == 422
         assert "detail" in response_json
 
-    def test_create_third_party_with_no_user(self, client, headers, third_party_seeders, third_party_data):
-        third_party_data_fail = third_party_data["user_id"] = "fail"
-        response = create_third_party(client, third_party_data_fail, headers)
+    def test_create_third_party_with_no_user(self, client, headers, third_party_data_invalid, third_party_data):
+        
+        response = create_third_party(client, third_party_data_invalid, headers)
         response_json = response.json()
 
         assert response.status_code == 422
