@@ -13,7 +13,7 @@ authorized = auth_service.authorized
 third_party_router = APIRouter(
     prefix='/third_parties',
     tags=["ThirdParty"],
-    dependencies=[Depends(oauth2_scheme)]
+    # dependencies=[Depends(oauth2_scheme)]
 )
 
 @third_party_router.post("", response_model=ThirdPartyResponseDTO

@@ -1,4 +1,4 @@
-# Aditional Services SportApp
+# Additional Services SportApp
 
 This is an additional services management platform
 
@@ -44,4 +44,4 @@ This is automatically generated and can be accessed via `http://0.0.0.0:8001/doc
 1. Run migrations with the command `alembic upgrade head`, this command will fill the database
 
 ### Seeders
-1. In http://127.0.0.1:8001/docs execute route seeders `/api/v1/aditional_service/third_parties/seeders/run`
+1. In http://127.0.0.1:8001/docs execute route seeders `/api/v1/additional_service/third_parties/seeders/run`
