@@ -52,3 +52,12 @@ async def get_third_party_by_id(third_party_id: int = Path(ge=1), db: Session = 
     third_party_service = ThirdPartyService()
     third_party = third_party_service.get_third_party_by_id(third_party_id, db)
     return third_party
+
+
+@third_party_router.get("/{user_id}", response_model=ThirdPartyResponseDTO
+                        # ,dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])]
+                        )
+async def get_third_party_by_user_id(user_id: int = Path(ge=1), db: Session = Depends(get_db)):
+    third_party_service = ThirdPartyService()
+    third_party = third_party_service.get_third_party_by_user_id(user_id, db)
+    return third_party

@@ -24,4 +24,8 @@ class Repository(ABC):
     @abstractmethod
     def delete(self, entity_id: int, db: Session) -> Entity:
         ...
+
+    @abstractmethod
+    def get_by_user_id(self, entity_id: int, db: Session) -> Entity:
+        ...    
     

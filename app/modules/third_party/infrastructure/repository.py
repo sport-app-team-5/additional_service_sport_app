@@ -22,6 +22,13 @@ class ThirdPartyRepositoryPostgres(ThirdPartyRepository):
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+    def get_by_user_id(self, entity_user_id: int, db: Session) -> ThirdPartyRequestDTO:
+        try:
+            third_party = db.query(ThirdParty).filter(ThirdParty.user_id == entity_user_id).first()
+            return third_party
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))        
+
     def get_all(self, db: Session) -> List[ThirdPartyRequestDTO]:
         try:
             third_parties = db.query(ThirdParty).all()
@@ -31,12 +38,10 @@ class ThirdPartyRepositoryPostgres(ThirdPartyRepository):
 
     def create(self, entity: ThirdParty, db: Session) -> ThirdPartyRequestDTO:
         try:
-
-            third_party = db.query(ThirdParty).filter(ThirdParty.id == entity.id).first()
-
-            print('third_party: ', third_party)
+            third_party = self.get_by_user_id(entity.user_id, db)
+            
             if not third_party:
-                third_party = ThirdParty(id = entity.id, user_id = entity.user_id)            
+                third_party = ThirdParty(user_id = entity.user_id)            
                 db.add(third_party)
                 db.commit()
                 return third_party

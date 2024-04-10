@@ -29,3 +29,7 @@ class ThirdPartyService(Service):
     def get_third_party_by_id(self, third_party_id: int, db: Session) -> ThirdPartyResponseDTO:
         repository = self.repository_factory.create_object(ThirdPartyRepository.__class__)
         return repository.get_by_id(third_party_id, db)
+
+    def get_third_party_by_user_id(self, user_id: int, db: Session) -> ThirdPartyResponseDTO:
+        repository = self.repository_factory.create_object(ThirdPartyRepository.__class__)
+        return repository.get_by_user_id(user_id, db) 
