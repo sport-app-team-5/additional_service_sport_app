@@ -1,1 +1,1 @@
-from app.api.v1.private import third_party_router
+from app.api.v1.public import third_party_router
