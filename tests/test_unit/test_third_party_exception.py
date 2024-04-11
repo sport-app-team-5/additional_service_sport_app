@@ -7,7 +7,7 @@ class NonRepository:
     pass
 
 
-class TestUserException:
+class TestThirdPartyException:
     def test_factory_third_party(self):
         third_party_service = ThirdPartyService()
 

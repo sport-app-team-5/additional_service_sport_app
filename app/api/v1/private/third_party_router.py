@@ -25,17 +25,6 @@ async def create_third_party(third_party: ThirdPartyRequestDTO, db: Session = De
     third_party_created = third_party_service.create_third_party(third_party, db)
     return third_party_created
 
-@third_party_router.put("", response_model=ThirdPartyResponseDTO
-                        #,dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])]
-                        , status_code=status.HTTP_202_ACCEPTED
-                        )
-async def update_third_party(third_party: ThirdPartyRequestDTO, db: Session = Depends(get_db)):
-    entity_id = third_party.id
-    third_party_service = ThirdPartyService()
-    third_party_updated = third_party_service.update_third_party(entity_id, third_party, db)
-    return third_party_updated    
-
-
 @third_party_router.get("", response_model=List[ThirdPartyResponseDTO]
                         #,dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])]
                         )
@@ -54,10 +43,11 @@ async def get_third_party_by_id(third_party_id: int = Path(ge=1), db: Session = 
     return third_party
 
 
-@third_party_router.get("/{user_id}", response_model=ThirdPartyResponseDTO
+@third_party_router.get("/user/{user_id}", response_model=ThirdPartyResponseDTO
                         # ,dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])]
                         )
 async def get_third_party_by_user_id(user_id: int = Path(ge=1), db: Session = Depends(get_db)):
+    print("Llegué aquí")
     third_party_service = ThirdPartyService()
     third_party = third_party_service.get_third_party_by_user_id(user_id, db)
     return third_party
