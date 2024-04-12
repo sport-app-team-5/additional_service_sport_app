@@ -11,6 +11,7 @@ httpx==0.26.0
 pytest-cov
 email-validator
 python-jose
+sqlalchemy-pagination
 boto3
 bcrypt
 pydantic-settings

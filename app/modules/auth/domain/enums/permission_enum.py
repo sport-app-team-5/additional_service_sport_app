@@ -6,6 +6,7 @@ class PermissionEnum(str, Enum):
     READ_USER = ("Read user", "read", "RUSO")
     UPDATE_USER = ("Update user", "update", "UUSO")
     DEACTIVATE_USER = ("Delete user", "deactivate", "DUSO")
+    MANAGE_SESSION = ("Manage session", "manage", "MASE")
 
     # Acciones y permisos relacionados con los servicios
     CREATE_SERVICE = ("Create service", "create", "CSER")
