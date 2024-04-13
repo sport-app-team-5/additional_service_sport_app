@@ -5,7 +5,6 @@ from app.api.v1.router import private_router as private_v1
 from app.api.v1.router import public_router as public_v1
 from fastapi.middleware.cors import CORSMiddleware
 
-
 logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 app = FastAPI(**app_configs)
