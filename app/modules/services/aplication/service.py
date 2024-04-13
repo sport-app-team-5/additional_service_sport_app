@@ -15,17 +15,21 @@ class ServicesService(Service):
         return self._repository_factory
 
     def create_service(self, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
-        repository = self.repository_factory.create_object(ServicesRepository.__class__)
+        repository = self.repository_factory.create_object(ServicesRepository)
         return repository.create(service, db)
 
     def get_services(self, db: Session) -> List[ServiceResponseDTO]:
-        repository = self.repository_factory.create_object(ServicesRepository.__class__)
+        repository = self.repository_factory.create_object(ServicesRepository)
         return repository.get_all(db)
 
     def get_service_by_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
-        repository = self.repository_factory.create_object(ServicesRepository.__class__)
+        repository = self.repository_factory.create_object(ServicesRepository)
         return repository.get_by_id(service_id, db)
     
     def get_service_by_user_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
-        repository1 = self.repository_factory.create_object(ServicesRepository.__class__)
+        repository1 = self.repository_factory.create_object(ServicesRepository)
         return repository1.get_by_id(service_id, db)
+    
+    def update_service(self, service_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.update(service_id, service, db)

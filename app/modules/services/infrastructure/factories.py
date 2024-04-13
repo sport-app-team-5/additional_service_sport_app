@@ -9,7 +9,7 @@ from .exceptions import ImplementationNotExistForFabricTypeException
 @dataclass
 class RepositoryFactory(Factory):
     def create_object(self, obj: type) -> Repository:
-        if obj == ServicesRepository.__class__:
+        if obj == ServicesRepository:
             return ServicesRepositoryPostgres()
         else:
             raise ImplementationNotExistForFabricTypeException()

@@ -13,18 +13,18 @@ authorized = auth_service.authorized
 service_router = APIRouter(
     prefix='/services',
     tags=["services"],
-    #dependencies=[Depends(oauth2_scheme)]
+    dependencies=[Depends(oauth2_scheme)]
 )
 
-@service_router.post("", response_model=ServiceRequestDTO
+@service_router.post("", response_model=ServiceResponseDTO
                         #  ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
                          , status_code=status.HTTP_201_CREATED)
-async def create_service(service: ServiceResponseDTO, db: Session = Depends(get_db)):
+async def create_service(service: ServiceRequestDTO, db: Session = Depends(get_db)):
     services_service = ServicesService()
     service_created = services_service.create_service(service, db)
     return service_created
 
-@service_router.get("", response_model=List[ServiceRequestDTO]
+@service_router.get("", response_model=List[ServiceResponseDTO]
                         # ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
                         )
 async def get_services(db: Session = Depends(get_db)):
@@ -33,7 +33,7 @@ async def get_services(db: Session = Depends(get_db)):
     return services
 
 
-@service_router.get("/{service_id}", response_model=ServiceRequestDTO
+@service_router.get("/{service_id}", response_model=ServiceResponseDTO
                         # ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
                         )
 async def get_service_by_id(service_id: int = Path(ge=1), db: Session = Depends(get_db)):
@@ -42,7 +42,7 @@ async def get_service_by_id(service_id: int = Path(ge=1), db: Session = Depends(
     return service
 
 
-@service_router.get("/user/{user_id}", response_model=ServiceRequestDTO
+@service_router.get("/user/{user_id}", response_model=ServiceResponseDTO
                         # ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
                         )
 async def get_service_by_user_id(user_id: int = Path(ge=1), db: Session = Depends(get_db)):

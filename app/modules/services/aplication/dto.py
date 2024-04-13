@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from pydantic import ConfigDict, EmailStr, BaseModel
+from pydantic import ConfigDict, BaseModel
 
 
 @dataclass(frozen=True)
 class ServiceRequestDTO(BaseModel):
-    id: int
     third_party_id: int
-    type: int
+    type: str
     description: str
     is_active: bool
     cost: float
@@ -14,8 +13,8 @@ class ServiceRequestDTO(BaseModel):
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "third_party_id": 1,
-            "type": "",
-            "description": "",
+            "type": "TRANSPORT",
+            "description": "Servicio exclusivo para carreras de más de 4 horas",
             "is_active": True,
             "cost": 25.90         
         }
@@ -26,7 +25,7 @@ class ServiceRequestDTO(BaseModel):
 class ServiceResponseDTO(BaseModel):
     id: int
     third_party_id: int
-    type: int
+    type: str
     description: str
     is_active: bool
     cost: float

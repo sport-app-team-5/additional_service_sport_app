@@ -3,22 +3,17 @@ from app.modules.services.domain.enums.service_type_enum import ServiceTypesEnum
 
 
 class TestServiceTypesEnum:
-    def test_service_enum_values(self):
-        assert ServiceTypesEnum.ACCOMPANIMENT.value == "Read user"
-        assert ServiceTypesEnum.MECANIC.value == "Create service"
-        assert ServiceTypesEnum.TRANSPORT.value == "Deactivate product"
+    def test_service_type_enum_code(self):
+        assert ServiceTypesEnum.ACCOMPANIMENT.value == "ACCOMPANIMENT"
+        assert ServiceTypesEnum.MECANIC.value == "MECANIC"
+        assert ServiceTypesEnum.TRANSPORT.value == "TRANSPORT"
 
-    def test_permission_enum_action(self):
-        assert ServiceTypesEnum.ACCOMPANIMENT.action == "Read user"
-        assert ServiceTypesEnum.MECANIC.action == "Create service"
-        assert ServiceTypesEnum.TRANSPORT.action == "Deactivate product"
+    def test_service_type_enum_desc(self):
+        assert ServiceTypesEnum.ACCOMPANIMENT.desc == "Acompañamiento"
+        assert ServiceTypesEnum.MECANIC.desc == "Mecánica"
+        assert ServiceTypesEnum.TRANSPORT.desc == "Transporte"
 
-    def test_permission_enum_code(self):
-        assert ServiceTypesEnum.ACCOMPANIMENT.code == "Read user"
-        assert ServiceTypesEnum.MECANIC.code == "Create service"
-        assert ServiceTypesEnum.TRANSPORT.code == "Deactivate product"
-
-    @pytest.mark.parametrize("permission", [
+    @pytest.mark.parametrize("service_types", [
         ServiceTypesEnum.ACCOMPANIMENT,
         ServiceTypesEnum.MECANIC,
         ServiceTypesEnum.TRANSPORT
