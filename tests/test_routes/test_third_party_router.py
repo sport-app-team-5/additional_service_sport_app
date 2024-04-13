@@ -121,19 +121,19 @@ class TestGetThirdPartiesRouter:
 
 
 def create_third_party(client, data, headers) -> Response:
-    third_party_created = client.post("/api/v1/additional_service/third_parties", headers=headers, json=data)
+    third_party_created = client.post("/api/v1/third_parties", headers=headers, json=data)
     return third_party_created
 
 def get_third_party(client, third_party_id, headers) -> Response:
-    third_party = client.get(f"/api/v1/additional_service/third_parties/{third_party_id}", headers=headers)
+    third_party = client.get(f"/api/v1/auth/third_parties/{third_party_id}", headers=headers)
     return third_party
 
 def get_third_party_by_user_id(client, user_id, headers) -> Response:
-    third_party = client.get(f"/api/v1/additional_service/third_parties/user/{user_id}", headers=headers)
+    third_party = client.get(f"/api/v1/auth/third_parties/user/{user_id}", headers=headers)
     return third_party
 
 def get_third_parties(client, headers) -> Response:
-    third_parties = client.get("/api/v1/additional_service/third_parties", headers=headers)
+    third_parties = client.get("/api/v1/auth/third_parties", headers=headers)
     return third_parties
 
 

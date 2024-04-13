@@ -16,14 +16,6 @@ third_party_router = APIRouter(
     dependencies=[Depends(oauth2_scheme)]
 )
 
-@third_party_router.post("", response_model=ThirdPartyResponseDTO
-                         ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
-                         , status_code=status.HTTP_201_CREATED)
-async def create_third_party(third_party: ThirdPartyRequestDTO, db: Session = Depends(get_db)):
-    third_party_service = ThirdPartyService()
-    third_party_created = third_party_service.create_third_party(third_party, db)
-    return third_party_created
-
 @third_party_router.get("", response_model=List[ThirdPartyResponseDTO],
                         dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
 async def get_third_parties(db: Session = Depends(get_db)):
