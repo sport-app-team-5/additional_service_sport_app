@@ -34,6 +34,10 @@ class ServicesService(Service):
         return repository.get_by_id(service_id, db)
     
     def get_service_by_user_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
+        # user_id = get_current_user_id()
+        # third_party = ThirdPartyService.get_third_party_by_user_id(user_id)
+        # service.third_party_id = third_party.id
+        
         repository1 = self.repository_factory.create_object(ServicesRepository)
         return repository1.get_by_id(service_id, db)
     
