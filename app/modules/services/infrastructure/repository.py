@@ -41,7 +41,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
 
     def update(self, entity_id: int, entity: Service, db: Session) -> ServiceResponseDTO:
         try:
-            service = db.query(Service).filter(Service.id == entity_id).first()
+            service = db.query(Service).filter(Service.id == entity_id).one_or_none()            
             
             if service:
                 service.cost = entity.cost
@@ -59,7 +59,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
 
     def deactivate(self, entity_id: int, db: Session) -> ServiceResponseDTO:
         try:
-            service = db.query(Service).filter(Service.id == entity_id).first()
+            service = db.query(Service).filter(Service.id == entity_id).one_or_none()
             
             if service:                
                 service.is_active = False

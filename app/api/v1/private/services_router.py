@@ -13,7 +13,7 @@ authorized = auth_service.authorized
 service_router = APIRouter(
     prefix='/services',
     tags=["services"],
-    dependencies=[Depends(oauth2_scheme)]
+    # dependencies=[Depends(oauth2_scheme)]
 )
 
 @service_router.post("", response_model=ServiceResponseDTO
@@ -23,6 +23,22 @@ async def create_service(service: ServiceRequestDTO, db: Session = Depends(get_d
     services_service = ServicesService()
     service_created = services_service.create_service(service, db)
     return service_created
+
+@service_router.put("/{service_id}", response_model=ServiceResponseDTO
+                        #  ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
+                         , status_code=status.HTTP_200_OK)
+async def update_service(service_id: int, service: ServiceRequestDTO, db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    service_updated = services_service.update_service(service_id, service, db)
+    return service_updated
+
+@service_router.put("/deactivate/{service_id}", response_model=ServiceResponseDTO
+                        #  ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]
+                         , status_code=status.HTTP_200_OK)
+async def deactivate_service(service_id: int, db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    service_updated = services_service.deactivate(service_id, db)
+    return service_updated
 
 @service_router.get("", response_model=List[ServiceResponseDTO]
                         # ,dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])]

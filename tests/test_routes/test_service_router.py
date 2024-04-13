@@ -69,7 +69,7 @@ class TestGetServiceRouter:
         service = get_service(client, service_created_json["id"], headers)
 
         assert service.status_code == 200
-        #assert "id" in service.json()
+        assert "id" in service.json()
         assert service_data["third_party_id"] == service.json()["third_party_id"]
 
     def test_get_service_with_no_found_id(self, client, headers):
@@ -93,7 +93,7 @@ class TestGetServiceRouterByUserId:
         service = get_service_by_user_id(client, service_created_json["third_party_id"], headers)
 
         assert service.status_code == 200
-        #assert "id" in service.json()
+        assert "id" in service.json()
         assert service_data["third_party_id"] == service.json()["third_party_id"]
 
     def test_get_service_with_no_found_user_id(self, client, headers):
@@ -117,7 +117,7 @@ class TestGetServicesRouter:
         service = get_services(client, headers)
 
         assert service.status_code == 200
-        #assert "id" in service.json()[0]
+        assert "id" in service.json()[0]
 
     def test_get_services_empty(self, client, headers):
         service = get_services(client, headers)
@@ -126,9 +126,41 @@ class TestGetServicesRouter:
         assert [] == service.json()
 
 
+class TestDeactivateServiceRouter:
+    def test_deactivate_service(self, client, headers, service_seeders, service_data):
+        service_created = create_service(client, service_data, headers)
+        service_created_json = service_created.json()
+        service = deactivate_service(client, service_created_json["id"], headers)
+
+        assert service.status_code == 200
+        assert "id" in service.json()
+        assert service_data["is_active"] != service.json()["is_active"]
+
+    def test_get_service_with_no_found_id(self, client, headers):
+        service_id = 4
+        response = get_service(client, service_id, headers)
+
+        assert response.status_code == 404
+        assert "detail" in response.json()
+
+    def test_get_service_with_none_id(self, client, headers):
+        service_id = None
+        response = get_service(client, service_id, headers)
+
+        assert response.status_code == 422
+        assert "detail" in response.json()
+
 def create_service(client, data, headers) -> Response:
     service_created = client.post("/api/v1/additional_service/services", headers=headers, json=data)
     return service_created
+
+def update_services(client, service_id, data, headers) -> Response:
+    services = client.put("/api/v1/additional_service/services/{service_id}", headers=headers, json=data)
+    return services
+
+def deactivate_service(client, service_id, headers) -> Response:
+    service = client.put(f"/api/v1/additional_service/services/deactivate/{service_id}", headers=headers)
+    return service
 
 def get_service(client, service_id, headers) -> Response:
     service = client.get(f"/api/v1/additional_service/services/{service_id}", headers=headers)
