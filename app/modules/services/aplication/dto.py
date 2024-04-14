@@ -4,7 +4,7 @@ from pydantic import ConfigDict, BaseModel
 
 # @dataclass(frozen=True)
 class ServiceRequestDTO(BaseModel):
-    third_party_id: int
+    third_party_id: int = 0
     type: str
     description: str
     is_active: bool
