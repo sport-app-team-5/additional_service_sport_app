@@ -18,11 +18,14 @@ class ServicesService:
 
     def create_service(self, user_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
 
-        third_party = ThirdPartyService.get_third_party_by_user_id(user_id, db)
-        service.third_party_id = third_party.id
-
-        repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.create(service, db)
+        print("user_id: ", user_id)
+        third_party_service = ThirdPartyService()
+        third_party = third_party_service.get_third_party_by_user_id(user_id, db)
+        
+        if third_party:
+            service.third_party_id = third_party.id
+            repository = self.repository_factory.create_object(ServicesRepository)
+            return repository.create(service, db)
 
     def get_services(self, db: Session) -> List[ServiceResponseDTO]:
         repository = self.repository_factory.create_object(ServicesRepository)

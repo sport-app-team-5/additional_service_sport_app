@@ -46,7 +46,7 @@ def client(__app: FastAPI, db: SessionTesting) -> Generator[TestClient, Any, Non
         pass    
 
     # noinspection PyUnresolvedReferences
-    app.dependency_overrides.update({get_db: __get_test_db, AuthService.authorized: __authorized, get_current_user_id: __get_current_user_id})
+    app.dependency_overrides.update({get_db: __get_test_db, AuthService.authorized: __authorized, get_current_user_id: __get_current_user_id,})
 
     with TestClient(__app) as client:
         yield client

@@ -1,10 +1,18 @@
 import pytest
 from httpx import Response
 
+from app.modules.services.domain.entities import Service
+from app.modules.third_party.domain.entities import ThirdParty
 
 @pytest.fixture
-def service_seeders(db) -> None:
+def third_party_seeders(db) -> None:
+    db.add(ThirdParty(user_id=1))
     db.commit()
+
+# @pytest.fixture
+# def service_seeders(db) -> None:
+#     db.add(Service(third_party_id=1, type))
+#     db.commit()
 
 
 @pytest.fixture
@@ -25,7 +33,8 @@ def service_data_invalid() -> dict:
 
 
 class TestCreateServiceRouter:
-    def test_create_service(self, client, headers,  service_data):
+    def test_create_service(self, client, headers,  third_party_seeders, service_data):
+
         service_created = create_service(client, service_data, headers)
         service_created_json = service_created.json()
 
@@ -63,7 +72,7 @@ class TestCreateServiceRouter:
 
 
 class TestGetServiceRouter:
-    def test_get_service(self, client, headers, service_seeders, service_data):
+    def test_get_service(self, client, headers, third_party_seeders, service_data):
         service_created = create_service(client, service_data, headers)
         service_created_json = service_created.json()
         service = get_service(client, service_created_json["id"], headers)
@@ -87,12 +96,13 @@ class TestGetServiceRouter:
         assert "detail" in response.json()
 
 class TestGetServicesRouter:
-    def test_get_services(self, client, headers, service_data):
+    def test_get_services(self, client, headers, third_party_seeders, service_data):
         create_service(client, service_data, headers)
         service = get_services(client, headers)
-
         assert service.status_code == 200
-        assert "id" in service.json()[0]
+        service_json = service.json()
+        assert len(service_json) > 0, "Expected 'service.json()' to be a non-empty list"
+        assert "id" in service_json[0]
 
     def test_get_services_empty(self, client, headers):
         service = get_services(client, headers)
@@ -102,7 +112,7 @@ class TestGetServicesRouter:
 
 
 class TestDeactivateServiceRouter:
-    def test_deactivate_service(self, client, headers, service_seeders, service_data):
+    def test_deactivate_service(self, client, headers, third_party_seeders, service_data):
         service_created = create_service(client, service_data, headers)
         service_created_json = service_created.json()
         service = deactivate_service(client, service_created_json["id"], headers)
@@ -145,4 +155,7 @@ def get_services(client, headers) -> Response:
     services = client.get("/api/v1/auth/services", headers=headers)
     return services
 
+def create_third_party(client, data, headers) -> Response:
+    third_party_created = client.post("/api/v1/third_parties", headers=headers, json=data)
+    return third_party_created
 

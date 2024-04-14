@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pydantic import ConfigDict, BaseModel
 
 
-@dataclass(frozen=True)
+# @dataclass(frozen=True)
 class ServiceRequestDTO(BaseModel):
     third_party_id: int
     type: str
