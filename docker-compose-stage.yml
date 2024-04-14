@@ -29,7 +29,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=6565
-      - POSTGRES_DB=user_sport_app
+      - POSTGRES_DB=additional_service_sport_app
     networks:
       internal_net:
         aliases:

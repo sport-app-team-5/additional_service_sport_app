@@ -13,6 +13,7 @@ on:
         - develop
         - main
         - release/*
+        - feature/*
 jobs:
   sonarqube:
     name: SonarQube
@@ -35,16 +36,17 @@ jobs:
     #     run: tox -e py
       - name: run coverage
         id: run-coverage
-        run: |
-          pytest --cov=app
-          python -m pytest -v --junitxml="coverage.xml"
+        run: |          
+          coverage run -m pytest -rap  --junitxml coverage.xml
+          coverage xml -i 
           echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
           for i in ${{ steps.pl.outputs.paths }}; do
           echo $i
           done
-
+          echo $GITHUB_WORKSPACE  
       - name: SonarQube Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
             SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - run: echo $GITHUB_WORKSPACE  
