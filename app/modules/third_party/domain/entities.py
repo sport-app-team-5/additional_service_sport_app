@@ -1,7 +1,8 @@
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from sqlalchemy import DateTime, Integer
 from app.config.db import Base
+from app.modules.services.domain.entities import Service
 
 
 class ThirdParty(Base):

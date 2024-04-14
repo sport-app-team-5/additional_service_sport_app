@@ -7,18 +7,4 @@ from sqlalchemy.orm import Session
 
 
 class ThirdPartyRepository(Repository, ABC):
-    @abstractmethod
-    def get_by_id(self, entity_id: int, db: Session) -> ThirdPartyRequestDTO:
-        ...
-
-    @abstractmethod
-    def get_by_user_id(self, entity_user_id: int, db: Session) -> ThirdPartyRequestDTO:
-        ...
-    
-    @abstractmethod
-    def get_all(self, db: Session) -> List[ThirdPartyRequestDTO]:
-        ...
-
-    @abstractmethod
-    def create(self, entity: ThirdParty, db: Session) -> ThirdPartyRequestDTO:
-        ...
+    ...
