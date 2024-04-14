@@ -21,7 +21,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
             return service
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
+        
     def get_all(self, db: Session) -> List[ServiceResponseDTO]:
         try:
             third_parties = db.query(Service).all()

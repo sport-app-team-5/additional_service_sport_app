@@ -86,31 +86,6 @@ class TestGetServiceRouter:
         assert response.status_code == 422
         assert "detail" in response.json()
 
-class TestGetServiceRouterByUserId:
-    def test_get_service_by_user_id(self, client, headers, service_data):
-        service_created = create_service(client, service_data, headers)
-        service_created_json = service_created.json()
-        service = get_service_by_user_id(client, service_created_json["third_party_id"], headers)
-
-        assert service.status_code == 200
-        assert "id" in service.json()
-        assert service_data["third_party_id"] == service.json()["third_party_id"]
-
-    def test_get_service_with_no_found_user_id(self, client, headers):
-        user_id = 9999
-        response = get_service_by_user_id(client, user_id, headers)
-
-        assert response.status_code == 404
-        assert "detail" in response.json()
-
-    def test_get_service_with_none_user_id(self, client, headers):
-        user_id = None
-        response = get_service_by_user_id(client, user_id, headers)
-
-        assert response.status_code == 422
-        assert "detail" in response.json()
-
-
 class TestGetServicesRouter:
     def test_get_services(self, client, headers, service_data):
         create_service(client, service_data, headers)
@@ -151,27 +126,23 @@ class TestDeactivateServiceRouter:
         assert "detail" in response.json()
 
 def create_service(client, data, headers) -> Response:
-    service_created = client.post("/api/v1/additional_service/services", headers=headers, json=data)
+    service_created = client.post("/api/v1/auth/services", headers=headers, json=data)
     return service_created
 
 def update_services(client, service_id, data, headers) -> Response:
-    services = client.put("/api/v1/additional_service/services/{service_id}", headers=headers, json=data)
+    services = client.put("/api/v1/auth/services/{service_id}", headers=headers, json=data)
     return services
 
 def deactivate_service(client, service_id, headers) -> Response:
-    service = client.put(f"/api/v1/additional_service/services/deactivate/{service_id}", headers=headers)
+    service = client.put(f"/api/v1/auth/services/deactivate/{service_id}", headers=headers)
     return service
 
 def get_service(client, service_id, headers) -> Response:
-    service = client.get(f"/api/v1/additional_service/services/{service_id}", headers=headers)
-    return service
-
-def get_service_by_user_id(client, user_id, headers) -> Response:
-    service = client.get(f"/api/v1/additional_service/services/user/{user_id}", headers=headers)
+    service = client.get(f"/api/v1/auth/services/{service_id}", headers=headers)
     return service
 
 def get_services(client, headers) -> Response:
-    services = client.get("/api/v1/additional_service/services", headers=headers)
+    services = client.get("/api/v1/auth/services", headers=headers)
     return services
 
 

@@ -7,23 +7,5 @@ from sqlalchemy.orm import Session
 
 
 class ServicesRepository(Repository, ABC):
-    @abstractmethod
-    def get_by_id(self, entity_id: int, db: Session) -> ServiceResponseDTO:
-        ...
-    
-    @abstractmethod
-    def get_all(self, db: Session) -> List[ServiceResponseDTO]:
-        ...
-
-    @abstractmethod
-    def create(self, entity: Service, db: Session) -> ServiceResponseDTO:
-        ...
-
-    @abstractmethod
-    def update(self, entity_id: int, entity: Service, db: Session) -> ServiceResponseDTO:
-        ...
-
-    @abstractmethod
-    def deactivate(self, entity_id: int, db: Session) -> ServiceResponseDTO:
-        ...
+    ...
         

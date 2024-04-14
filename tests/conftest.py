@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from app.config.db import Base, get_db
 from app.main import app
 from app.modules.auth.domain.service import AuthService
+from app.seedwork.presentation.jwt import get_current_user_id
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.db"
 engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
@@ -38,11 +39,14 @@ def client(__app: FastAPI, db: SessionTesting) -> Generator[TestClient, Any, Non
     def __get_test_db():
         yield db
 
+    def __get_current_user_id():
+        return 1    
+
     def __authorized():
-        pass
+        pass    
 
     # noinspection PyUnresolvedReferences
-    app.dependency_overrides.update({get_db: __get_test_db, AuthService.authorized: __authorized})
+    app.dependency_overrides.update({get_db: __get_test_db, AuthService.authorized: __authorized, get_current_user_id: __get_current_user_id})
 
     with TestClient(__app) as client:
         yield client

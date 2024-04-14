@@ -8,7 +8,7 @@ from app.seedwork.aplication.services import Service
 from app.modules.third_party.aplication.service import ThirdPartyService
 
 
-class ServicesService(Service):
+class ServicesService:
     def __init__(self):
         self._repository_factory: RepositoryFactory = RepositoryFactory()
 
@@ -16,11 +16,10 @@ class ServicesService(Service):
     def repository_factory(self):
         return self._repository_factory
 
-    def create_service(self, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
+    def create_service(self, user_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
 
-        # user_id = get_current_user_id()
-        # third_party = ThirdPartyService.get_third_party_by_user_id(user_id)
-        # service.third_party_id = third_party.id
+        third_party = ThirdPartyService.get_third_party_by_user_id(user_id, db)
+        service.third_party_id = third_party.id
 
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.create(service, db)
@@ -32,14 +31,6 @@ class ServicesService(Service):
     def get_service_by_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.get_by_id(service_id, db)
-    
-    def get_service_by_user_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
-        # user_id = get_current_user_id()
-        # third_party = ThirdPartyService.get_third_party_by_user_id(user_id)
-        # service.third_party_id = third_party.id
-        
-        repository1 = self.repository_factory.create_object(ServicesRepository)
-        return repository1.get_by_id(service_id, db)
     
     def update_service(self, service_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
