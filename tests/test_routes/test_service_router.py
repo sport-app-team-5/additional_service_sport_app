@@ -9,12 +9,6 @@ def third_party_seeders(db) -> None:
     db.add(ThirdParty(user_id=1))
     db.commit()
 
-# @pytest.fixture
-# def service_seeders(db) -> None:
-#     db.add(Service(third_party_id=1, type))
-#     db.commit()
-
-
 @pytest.fixture
 def service_data() -> dict:
     return {
