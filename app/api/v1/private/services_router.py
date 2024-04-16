@@ -23,7 +23,6 @@ service_router = APIRouter(
 def create_service(service: ServiceRequestDTO,
                    db: Session = Depends(get_db),
                    user_id: int = Depends(get_current_user_id)):
-    print(user_id)
     services_service = ServicesService()
     service_created = services_service.create_service(user_id, service, db)
     return service_created
