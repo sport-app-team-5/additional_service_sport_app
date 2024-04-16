@@ -32,8 +32,6 @@ jobs:
             pip install sqlalchemy    
             pip install tox                        
             pip install -r requirements.txt
-    #   - name: Run tox
-    #     run: tox -e py
       - name: run coverage
         id: run-coverage
         run: |          
