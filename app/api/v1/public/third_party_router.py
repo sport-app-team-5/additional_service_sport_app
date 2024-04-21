@@ -12,11 +12,10 @@ third_party_router = APIRouter(
     tags=["ThirdParty"]
 )
 
+
 @third_party_router.post("", response_model=ThirdPartyResponseDTO
-                         , status_code=status.HTTP_201_CREATED)
+    , status_code=status.HTTP_201_CREATED)
 async def create_third_party(third_party: ThirdPartyRequestDTO, db: Session = Depends(get_db)):
     third_party_service = ThirdPartyService()
     third_party_created = third_party_service.create_third_party(third_party, db)
     return third_party_created
-
-

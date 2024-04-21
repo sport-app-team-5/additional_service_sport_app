@@ -16,6 +16,7 @@ third_party_router = APIRouter(
     dependencies=[Depends(oauth2_scheme)]
 )
 
+
 @third_party_router.get("", response_model=List[ThirdPartyResponseDTO],
                         dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
 def get_third_parties(db: Session = Depends(get_db)):
