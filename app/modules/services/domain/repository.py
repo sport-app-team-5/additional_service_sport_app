@@ -9,3 +9,6 @@ from sqlalchemy.orm import Session
 class ServicesRepository(Repository, ABC):
     ...
         
+class EventRepository(Repository, ABC):
+    ...
+        
