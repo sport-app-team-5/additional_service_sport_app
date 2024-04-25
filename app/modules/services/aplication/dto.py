@@ -69,8 +69,8 @@ class EventUpdateRequestDTO(BaseModel):
     })
 
 class EventResponseDTO(BaseModel):
-    id: int = None
-    third_party_id: int = None
+    id: Optional[int] = None
+    third_party_id: Optional[int] = None
     city_id: int
     sport_id: int
     location: str
