@@ -19,3 +19,36 @@ class Service(Base):
 
     def __str__(self):
         return self.name
+    
+
+class Event(Base):
+    __tablename__ = 'event'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    third_party_id: Mapped[int] = mapped_column(ForeignKey("third_party.id"), index=True)
+    city_id: Mapped[int] =  mapped_column(Integer)
+    sport_id: Mapped[int] = mapped_column(ForeignKey("sport.id"), index=True)
+    location: Mapped[str] = mapped_column(String(150))
+    date: Mapped[str] = mapped_column(String(30))
+    capacity: Mapped[int] = mapped_column(Integer)
+    description: Mapped[str] = mapped_column(String(256))    
+    type: Mapped[str] = mapped_column(String(30))
+
+    created_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    third: Mapped["ThirdParty"] = relationship()
+    sport: Mapped["Sport"] = relationship()
+    def __str__(self):
+        return self.name
+    
+class Sport(Base):
+    __tablename__ = "sport"
+    id: Mapped[int] = mapped_column(primary_key=True, index=True)
+    code: Mapped[str] = mapped_column(String(5), unique=True)
+    name: Mapped[str] = mapped_column(String(50), unique=True)
+    created_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __str__(self):
+        return self.name
