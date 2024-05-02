@@ -8,8 +8,8 @@ from app.modules.services.aplication.dto import EventRequestDTO, EventResponseDT
 from app.modules.services.aplication.service import EventService
 from app.seedwork.presentation.jwt import get_current_user_id, oauth2_scheme
 
-auth_event = AuthService()
-authorized = auth_event.authorized
+auth_service = AuthService()
+authorized = auth_service.authorized
 event_router = APIRouter(
     prefix='/events',
     tags=["events"],
