@@ -143,3 +143,10 @@ class EventRepositoryPostgres(EventRepository):
             service.description = entity.description
         if entity.type:
             service.type = entity.type.value
+
+    def get_by_third_party_id(self, third_party_id: int, db: Session) -> List[EventResponseDTO]:
+        try:
+            events = db.query(Event).filter(Event.third_party_id == third_party_id).all()
+            return events
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

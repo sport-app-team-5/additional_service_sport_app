@@ -69,3 +69,11 @@ class EventService:
     def update_event(self, event_id: int, event: EventUpdateRequestDTO, db: Session) -> EventResponseDTO:
         repository = self.repository_factory.create_object(EventRepository)
         return repository.update(event_id, event, db)
+
+    def get_events_by_third_party_id(self, user_id: int, db: Session) -> List[EventResponseDTO]:
+        third_party_event = ThirdPartyService()
+        third_party = third_party_event.get_third_party_by_user_id(user_id, db)
+
+        if third_party:
+            repository = self.repository_factory.create_object(EventRepository)
+            return repository.get_by_third_party_id(third_party.id, db)
