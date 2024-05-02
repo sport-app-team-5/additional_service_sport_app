@@ -68,11 +68,16 @@ class EventUpdateRequestDTO(BaseModel):
     })
 
 
+class SportResponseDTO(BaseModel):
+    id: int
+    name: str
+
+
 class EventResponseDTO(BaseModel):
     id: Optional[int] = None
     third_party_id: Optional[int] = None
     city_id: int
-    sport_id: int
+    sport: SportResponseDTO
     location: str
     date: str
     capacity: int
