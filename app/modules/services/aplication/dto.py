@@ -39,6 +39,7 @@ class EventRequestDTO(BaseModel):
     sport_id: int
     location: str
     date: str
+    name: str
     capacity: int
     description: str
     type: EventTypesEnum
@@ -51,6 +52,7 @@ class EventUpdateRequestDTO(BaseModel):
     location: Optional[str] = None
     date: Optional[str] = None
     capacity: Optional[int] = None
+    name: Optional[str] = None
     description: Optional[str] = None
     type: Optional[EventTypesEnum] = None
 
@@ -59,6 +61,7 @@ class EventUpdateRequestDTO(BaseModel):
             "third_party_id": 1,
             "city_id": 2,
             "sport_id": 1,
+            "name": "Maratón de Buenos Aires",
             "location": "Stadium",
             "date": "2022-12-31",
             "capacity": 5000,
@@ -80,6 +83,7 @@ class EventResponseDTO(BaseModel):
     sport: SportResponseDTO
     location: str
     date: str
+    name: str
     capacity: int
     description: str
     type: EventTypesEnum

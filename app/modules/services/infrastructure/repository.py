@@ -102,7 +102,7 @@ class EventRepositoryPostgres(EventRepository):
         try:
             service = Event(third_party_id=entity.third_party_id, city_id=entity.city_id, sport_id=entity.sport_id,
                             location=entity.location, date=entity.date, capacity=entity.capacity,
-                            description=entity.description, type=entity.type.value)
+                            description=entity.description, type=entity.type.value, name=entity.name)
             db.add(service)
             db.commit()
             return service

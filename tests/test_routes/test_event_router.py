@@ -16,7 +16,7 @@ def event_seeders(db) -> None:
     db.add(ThirdParty(user_id=1))
     db.add(Sport(name="Ciclismo", code="CI"))
     db.add(Event(third_party_id=1, city_id=1, sport_id=1, location="parque", date="2024-04-27T02:17", capacity=3,
-                 description="ningun", type="ROUTE"))
+                 description="ningun", type="ROUTE", name="ningun"))
     db.commit()
 
 
@@ -27,6 +27,7 @@ event_data = {
     "location": "parque",
     "date": "2024-04-27T02:17",
     "capacity": 3,
+    "name": "ningun",
     "description": "ningun",
     "type": "ROUTE"
 }

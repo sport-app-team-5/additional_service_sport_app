@@ -34,6 +34,7 @@ class Event(Base):
     date: Mapped[str] = mapped_column(String(30))
     capacity: Mapped[int] = mapped_column(Integer)
     description: Mapped[str] = mapped_column(String(256))
+    name: Mapped[str] = mapped_column(String)
     type: Mapped[str] = mapped_column(String(30))
     created_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow)
     updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -42,7 +43,7 @@ class Event(Base):
     sport: Mapped["Sport"] = relationship()
 
     def __str__(self):
-        return self.description
+        return self.name
 
 
 class Sport(Base):
