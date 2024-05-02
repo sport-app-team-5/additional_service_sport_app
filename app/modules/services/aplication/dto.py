@@ -83,7 +83,7 @@ class EventResponseDTO(BaseModel):
     sport: SportResponseDTO
     location: str
     date: str
-    name: str
+    name: Optional[str] = None
     capacity: int
     description: str
     type: EventTypesEnum
