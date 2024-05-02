@@ -1,8 +1,7 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 from datetime import datetime
 from sqlalchemy import DateTime, Integer
 from app.config.db import Base
-from app.modules.services.domain.entities import Service
 
 
 class ThirdParty(Base):
@@ -14,4 +13,5 @@ class ThirdParty(Base):
     updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     def __str__(self):
-        return self.name
+        return self.user_id
+    
