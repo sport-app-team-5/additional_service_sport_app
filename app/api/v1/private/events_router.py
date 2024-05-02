@@ -17,6 +17,14 @@ event_router = APIRouter(
 )
 
 
+@event_router.get("/third_parties", response_model=List[EventResponseDTO],
+                  dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
+def get_events_by_third_party_id(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
+    event_service = EventService()
+    events = event_service.get_events_by_third_party_id(user_id, db)
+    return events
+
+
 @event_router.post("", response_model=EventRequestDTO,
                    dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])],
                    status_code=status.HTTP_201_CREATED)

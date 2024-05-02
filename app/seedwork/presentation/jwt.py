@@ -15,6 +15,7 @@ def decode_token(token: str = Depends(oauth2_scheme)) -> dict:
     except JWTError:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Unauthorized')
 
+
 def get_current_user_id(token: Annotated[str, Depends(oauth2_scheme)]) -> int:
     payload = decode_token(token)
     user_id: int = int(payload.get("sub"))
