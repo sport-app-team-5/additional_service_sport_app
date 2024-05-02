@@ -6,6 +6,7 @@ from app.modules.services.aplication.dto import EventResponseDTO, ServiceRespons
 from app.modules.services.domain.entities import Service, Event
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
 
+
 class ServicesRepositoryPostgres(ServicesRepository):
     @staticmethod
     def __validate_exist_Service(entity_id: int, db: Session) -> Service:
@@ -21,7 +22,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
             return service
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-        
+
     def get_all(self, db: Session) -> List[ServiceResponseDTO]:
         try:
             third_parties = db.query(Service).all()
@@ -31,7 +32,8 @@ class ServicesRepositoryPostgres(ServicesRepository):
 
     def create(self, entity: Service, db: Session) -> ServiceResponseDTO:
         try:
-            service = Service(third_party_id = entity.third_party_id, type = entity.type, description = entity.description, is_active = entity.is_active, cost = entity.cost)            
+            service = Service(third_party_id=entity.third_party_id, type=entity.type, description=entity.description,
+                              is_active=entity.is_active, cost=entity.cost)
             db.add(service)
             db.commit()
             return service
@@ -41,8 +43,8 @@ class ServicesRepositoryPostgres(ServicesRepository):
 
     def update(self, entity_id: int, entity: Service, db: Session) -> ServiceResponseDTO:
         try:
-            service = db.query(Service).filter(Service.id == entity_id).one_or_none()            
-            
+            service = db.query(Service).filter(Service.id == entity_id).one_or_none()
+
             if service:
                 service.cost = entity.cost
                 service.description = entity.description
@@ -51,8 +53,8 @@ class ServicesRepositoryPostgres(ServicesRepository):
                 db.commit()
                 return service
             else:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")    
-            
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -60,14 +62,14 @@ class ServicesRepositoryPostgres(ServicesRepository):
     def deactivate(self, entity_id: int, db: Session) -> ServiceResponseDTO:
         try:
             service = db.query(Service).filter(Service.id == entity_id).one_or_none()
-            
-            if service:                
+
+            if service:
                 service.is_active = False
                 db.commit()
                 return service
             else:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")    
-            
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service not found")
+
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -88,7 +90,7 @@ class EventRepositoryPostgres(EventRepository):
             return service
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-        
+
     def get_all(self, db: Session) -> List[EventResponseDTO]:
         try:
             third_parties = db.query(Event).all()
@@ -98,7 +100,9 @@ class EventRepositoryPostgres(EventRepository):
 
     def create(self, entity: Event, db: Session) -> EventResponseDTO:
         try:
-            service = Event(third_party_id = entity.third_party_id, city_id = entity.city_id, sport_id = entity.sport_id, location = entity.location, date = entity.date, capacity = entity.capacity, description = entity.description, type = entity.type.value)            
+            service = Event(third_party_id=entity.third_party_id, city_id=entity.city_id, sport_id=entity.sport_id,
+                            location=entity.location, date=entity.date, capacity=entity.capacity,
+                            description=entity.description, type=entity.type.value)
             db.add(service)
             db.commit()
             return service
@@ -108,7 +112,7 @@ class EventRepositoryPostgres(EventRepository):
 
     def update(self, entity_id: int, entity: Event, db: Session) -> EventResponseDTO:
         try:
-            service = db.query(Event).filter(Event.id == entity_id).one_or_none()            
+            service = db.query(Event).filter(Event.id == entity_id).one_or_none()
 
             if service:
                 self.__update_event_attributes(service, entity)
@@ -116,8 +120,8 @@ class EventRepositoryPostgres(EventRepository):
                 db.commit()
                 return service
             else:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")    
-            
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Event not found")
+
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))

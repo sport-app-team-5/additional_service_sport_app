@@ -8,8 +8,8 @@ from app.modules.services.aplication.dto import EventRequestDTO, EventResponseDT
 from app.modules.services.aplication.service import EventService
 from app.seedwork.presentation.jwt import get_current_user_id, oauth2_scheme
 
-auth_service = AuthService()
-authorized = auth_service.authorized
+auth_event = AuthService()
+authorized = auth_event.authorized
 event_router = APIRouter(
     prefix='/events',
     tags=["events"],
@@ -18,39 +18,36 @@ event_router = APIRouter(
 
 
 @event_router.post("", response_model=EventRequestDTO,
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])],
-                     status_code=status.HTTP_201_CREATED)
-def create_service(service: EventRequestDTO,
-                   db: Session = Depends(get_db),
-                   user_id: int = Depends(get_current_user_id)):
-    event_service = EventService()
-    service_created = event_service.create_service(user_id, service, db)
-    return service_created
+                   dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_SERVICE.code])],
+                   status_code=status.HTTP_201_CREATED)
+def create_event(event: EventRequestDTO,
+                 db: Session = Depends(get_db),
+                 user_id: int = Depends(get_current_user_id)):
+    event_event = EventService()
+    event_created = event_event.create_event(user_id, event, db)
+    return event_created
 
 
 @event_router.put("/{event_id}", response_model=EventUpdateRequestDTO,
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.UPDATE_SERVICE.code])],
-                    status_code=status.HTTP_200_OK)
-def update_service(event_id: int, service: EventUpdateRequestDTO, db: Session = Depends(get_db)):
-    event_service = EventService()
-    service_updated = event_service.update_service(event_id, service, db)
-    return service_updated
-
+                  dependencies=[Security(authorized, scopes=[PermissionEnum.UPDATE_SERVICE.code])],
+                  status_code=status.HTTP_200_OK)
+def update_event(event_id: int, event: EventUpdateRequestDTO, db: Session = Depends(get_db)):
+    event_event = EventService()
+    event_updated = event_event.update_event(event_id, event, db)
+    return event_updated
 
 
 @event_router.get("", response_model=List[EventResponseDTO],
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])]
-                    )
-def get_services(db: Session = Depends(get_db)):
-    event_service = EventService()
-    services = event_service.get_services(db)
-    return services
+                  dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
+def get_events(db: Session = Depends(get_db)):
+    event_event = EventService()
+    events = event_event.get_events(db)
+    return events
 
 
-@event_router.get("/{sportman_plan_id}", response_model=List[EventResponseDTO],
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])]
-                    )
-def get_service_by_id(sportman_plan_id: int = Path(ge=1), db: Session = Depends(get_db)):
-    event_service = EventService()
-    service = event_service.get_service_by_id(sportman_plan_id, db)
-    return service
+@event_router.get("/{sportsman_plan_id}", response_model=List[EventResponseDTO],
+                  dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
+def get_event_by_id(sportsman_plan_id: int = Path(ge=1), db: Session = Depends(get_db)):
+    event_event = EventService()
+    event = event_event.get_event_by_id(sportsman_plan_id, db)
+    return event
