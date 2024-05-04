@@ -1,5 +1,6 @@
 from typing import List
 from fastapi import HTTPException, status
+from sqlalchemy import exists
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from app.modules.services.aplication.dto import EventResponseDTO, EventSportmanResponseDTO, ServiceResponseDTO
@@ -142,7 +143,7 @@ class EventRepositoryPostgres(EventRepository):
             service.type = entity.type.value
 
 
-    def associate_sportman_event(self, entity_id: int, entity: EventSportman, db: Session) -> EventSportmanResponseDTO:
+    def associate_event_sportman(self, entity_id: int, entity: EventSportman, db: Session) -> EventSportmanResponseDTO:
         try:
             event_sportman = EventSportman(event_id = entity.event_id, sportman_id = entity.sportman_id)
             db.add(event_sportman)
@@ -160,7 +161,7 @@ class EventRepositoryPostgres(EventRepository):
                     Event.date >= initial_date,
                     Event.date <= final_date,
                     #Event.city_id == city_id,
-                    ~Event.event_sportmen.any()                
+                    ~exists().where(EventSportman.event_id == Event.id)             
             ).all()
 
             if available_events: 
@@ -175,7 +176,7 @@ class EventRepositoryPostgres(EventRepository):
             suscribed_events = db.query(Event).filter(
                     Event.date >= initial_date,
                     Event.date <= final_date,
-                    Event.event_sportmen.any(sportman_id = sportman_id)                
+                    exists().where(EventSportman.event_id == Event.id)              
             ).all()
 
             if suscribed_events: 

@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Session
-from app.modules.services.aplication.dto import AssociateSportmanEventRequestDTO, EventRequestDTO, EventResponseDTO, EventUpdateRequestDTO, ServiceRequestDTO, ServiceResponseDTO
+from app.modules.services.aplication.dto import AssociateSportmanEventRequestDTO, EventRequestDTO, EventResponseDTO, EventSportmanResponseDTO, EventUpdateRequestDTO, ServiceRequestDTO, ServiceResponseDTO
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
 from app.modules.services.infrastructure.factories import RepositoryFactory
 from app.seedwork.aplication.services import Service
@@ -75,7 +75,7 @@ class EventService:
         repository = self.repository_factory.create_object(EventRepository)
         return repository.update(service_id, service, db)
     
-    def associate_event_sportman(self, user_id: int, association: AssociateSportmanEventRequestDTO, db: Session) -> EventResponseDTO:
+    def associate_event_sportman(self, user_id: int, association: AssociateSportmanEventRequestDTO, db: Session) -> EventSportmanResponseDTO:
         repository = self.repository_factory.create_object(EventRepository)
         return repository.associate_event_sportman(user_id, association, db)
     

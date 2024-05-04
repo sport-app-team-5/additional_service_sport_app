@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.config.db import get_db
 from app.modules.auth.domain.enums.permission_enum import PermissionEnum
 from app.modules.auth.domain.service import AuthService
-from app.modules.services.aplication.dto import EventRequestDTO, EventResponseDTO, EventUpdateRequestDTO, AssociateSportmanEventRequestDTO
+from app.modules.services.aplication.dto import EventRequestDTO, EventResponseDTO, EventSportmanResponseDTO, EventUpdateRequestDTO, AssociateSportmanEventRequestDTO
 from app.modules.services.aplication.service import EventService
 from app.seedwork.presentation.jwt import get_current_user_id, oauth2_scheme
 
@@ -55,8 +55,8 @@ def get_service_by_id(sportman_plan_id: int = Path(ge=1), db: Session = Depends(
     service = event_service.get_service_by_id(sportman_plan_id, db)
     return service
 
-@event_router.post("/associate", response_model=EventResponseDTO,
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.ASSOCIATE_EVENT.code])]
+@event_router.post("/associate", response_model=EventSportmanResponseDTO,
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.UPDATE_USER.code])]
                     )
 def associate_event_sportman(association: AssociateSportmanEventRequestDTO, 
                              db: Session = Depends(get_db),
@@ -67,17 +67,20 @@ def associate_event_sportman(association: AssociateSportmanEventRequestDTO,
     return service_created
 
 
-@event_router.get("/sport", response_model=List[EventResponseDTO],
-                        dependencies=[Security(authorized, scopes=[PermissionEnum.READ_EVENT.code])])
+@event_router.get("/sport/event", response_model=List[EventResponseDTO],
+                        dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
 def get_available_events(initial_date: str, final_date: str, city_id: int, db: Session = Depends(get_db)):
+    print('initial_date: ', initial_date)
+    print('final_date: ', final_date)
+    print('city_id: ', city_id)
     event_service = EventService()
     services = event_service.get_available_events(initial_date, final_date, city_id, db)
     return services
 
 
 
-@event_router.get("/sport/subscribed", response_model=List[EventResponseDTO],
-                        dependencies=[Security(authorized, scopes=[PermissionEnum.READ_EVENT.code])])
+@event_router.get("/sport/event/subscribed", response_model=List[EventResponseDTO],
+                        dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
 def get_suscribed_events(sportman_id: int, initial_date: str, final_date: str, db: Session = Depends(get_db)):
     event_service = EventService()
     services = event_service.get_suscribed_events(sportman_id, initial_date, final_date, db)
