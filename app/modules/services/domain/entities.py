@@ -52,3 +52,16 @@ class Sport(Base):
 
     def __str__(self):
         return self.name
+    
+class EventSportman(Base):
+    __tablename__ = 'event_sportman'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    event_id: Mapped[int] =  mapped_column(ForeignKey("event.id"), index=True)
+    sportman_id: Mapped[int] = mapped_column(Integer)
+    created_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    event: Mapped["Event"] = relationship()
+    def __str__(self):
+        return self.name

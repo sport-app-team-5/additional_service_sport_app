@@ -25,6 +25,7 @@ class PermissionEnum(str, Enum):
     READ_EVENT = ("Read event", "read", "REVE")
     UPDATE_EVENT = ("Update event", "update", "UEVE")
     DEACTIVATE_EVENT = ("Deactivate event", "deactivate", "DEVE")
+    ASSOCIATE_EVENT = ("Associate event", "associate", "AEVE")
 
     def __new__(cls, value, action, code):
         obj = str.__new__(cls)
