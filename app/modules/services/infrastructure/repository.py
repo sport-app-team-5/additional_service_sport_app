@@ -1,9 +1,10 @@
 from typing import List
 from fastapi import HTTPException, status
+from sqlalchemy import exists
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from app.modules.services.aplication.dto import EventResponseDTO, ServiceResponseDTO
-from app.modules.services.domain.entities import Service, Event
+from app.modules.services.aplication.dto import EventResponseDTO, EventSportmanResponseDTO, ServiceResponseDTO
+from app.modules.services.domain.entities import EventSportman, Service, Event
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
 
 
@@ -125,6 +126,7 @@ class EventRepositoryPostgres(EventRepository):
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
 
     def __update_event_attributes(self, service: Event, entity: Event):
         if entity.third_party_id:
@@ -144,6 +146,49 @@ class EventRepositoryPostgres(EventRepository):
         if entity.type:
             service.type = entity.type.value
 
+
+    def associate_event_sportman(self, entity_id: int, entity: EventSportman, db: Session) -> EventSportmanResponseDTO:
+        try:
+            event_sportman = EventSportman(event_id = entity.event_id, sportman_id = entity.sportman_id)
+            db.add(event_sportman)
+            db.commit()
+            return event_sportman
+        
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+                
+
+    def get_available_events(self, initial_date: str, final_date: str, city_id: int, db: Session) -> List[EventResponseDTO]:
+        try:
+            available_events = db.query(Event).filter(
+                    Event.date >= initial_date,
+                    Event.date <= final_date,
+                    #Event.city_id == city_id,
+                    ~exists().where(EventSportman.event_id == Event.id)             
+            ).all()
+
+            if available_events: 
+                return available_events
+            else:
+                return []          
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
+    def get_suscribed_events(self, sportman_id: int, initial_date: str, final_date: str, db: Session) -> List[EventResponseDTO]:
+        try:
+            suscribed_events = db.query(Event).filter(
+                    Event.date >= initial_date,
+                    Event.date <= final_date,
+                    exists().where(EventSportman.event_id == Event.id)              
+            ).all()
+
+            if suscribed_events: 
+                return suscribed_events
+            else:
+                return []
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))        
     def get_by_third_party_id(self, third_party_id: int, db: Session) -> List[EventResponseDTO]:
         try:
             events = db.query(Event).filter(Event.third_party_id == third_party_id).all()

@@ -69,6 +69,28 @@ class TestEventRouter:
         assert response.status_code == 200
         assert response.json()[0]["id"] == 1
 
+    def test_associate_event_sportman (self, client, headers, event_seeders):
+        data = {
+            "sportman_id": 1,
+            "event_id": 1
+        }
+        response = associate_event_sportman(client, headers, data)
+        assert response.status_code == 200
+
+    def test_get_available_event(self, client, headers, event_seeders):
+        initial_date = "2024-05-01"
+        final_date = "2024-05-30"
+        city_id = 0
+        response = get_available_event(client, headers, initial_date, final_date, city_id)
+        assert response.status_code == 200         
+
+    def test_get_suscribed_event(self, client, headers, event_seeders):
+        initial_date = "2024-05-01"
+        final_date = "2024-05-30"
+        sportman_id = 1
+        response = get_suscribed_event(client, headers, sportman_id, initial_date, final_date)
+        assert response.status_code == 200         
+
 
 def create_event(client, headers, event_data) -> Response:
     result = client.post("/api/v1/auth/events", headers=headers, json=event_data)
@@ -91,5 +113,17 @@ def update_sportsman(client, headers, sportsman_id, event_data) -> Response:
 
 
 def get_event_by_third_party_id(client, headers) -> Response:
-    events = client.get(f"/api/v1/auth/events/third_parties", headers=headers)
+    events = client.get("/api/v1/auth/events/third_parties", headers=headers)
+    return events
+
+def associate_event_sportman(client, headers, data) -> Response:
+    events = client.post("/api/v1/auth/events/associate", headers=headers, json=data)
+    return events
+
+def get_available_event(client, headers, initial_date, final_date, city_id) -> Response:
+    events = client.get(f"/api/v1/auth/events/sport/event?initial_date={initial_date}&final_date={final_date}&city_id={city_id}", headers=headers)
+    return events
+
+def get_suscribed_event(client, headers, sportman_id, initial_date, final_date) -> Response:
+    events = client.get(f"/api/v1/auth/events/sport/event/subscribed?sportman_id={sportman_id}&initial_date={initial_date}&final_date={final_date}", headers=headers)
     return events

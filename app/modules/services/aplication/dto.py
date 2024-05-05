@@ -88,3 +88,21 @@ class EventResponseDTO(BaseModel):
     description: str
     type: EventTypesEnum
     model_config = ConfigDict(from_attributes=True)
+
+class AssociateSportmanEventRequestDTO(BaseModel):
+    sportman_id: int
+    event_id: int
+
+    model_config = ConfigDict(json_schema_extra={
+         "example": {
+                "sportman_id": 1,
+                "event_id": 1
+            }
+    })
+
+
+class EventSportmanResponseDTO(BaseModel):
+    id: int
+    event_id: int
+    sportman_id: int
+    model_config = ConfigDict(from_attributes=True) 
