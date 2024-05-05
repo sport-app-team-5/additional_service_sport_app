@@ -10,7 +10,6 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-
 # revision identifiers, used by Alembic.
 revision: str = '7a7c9d6b264b'
 down_revision: Union[str, None] = 'a0ca59623f6f'
@@ -25,7 +24,8 @@ def upgrade() -> None:
         sa.Column('code', sa.String(5), unique=True),
         sa.Column('name', sa.String(50), unique=True),
         sa.Column('created_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP')),
-        sa.Column('updated_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP'), onupdate=sa.text('CURRENT_TIMESTAMP'))
+        sa.Column('updated_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP'),
+                  onupdate=sa.text('CURRENT_TIMESTAMP'))
     )
 
     op.create_table(
@@ -40,8 +40,10 @@ def upgrade() -> None:
         sa.Column('description', sa.String(256)),
         sa.Column('type', sa.String(30)),
         sa.Column('created_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP')),
-        sa.Column('updated_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP'), onupdate=sa.text('CURRENT_TIMESTAMP'))
+        sa.Column('updated_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP'),
+                  onupdate=sa.text('CURRENT_TIMESTAMP'))
     )
+
 
 def downgrade():
     op.drop_table('event')
