@@ -1,6 +1,5 @@
 from fastapi import Response
 import pytest
-
 from app.modules.services.domain.entities import Event, Sport
 from app.modules.third_party.domain.entities import ThirdParty
 
@@ -16,7 +15,8 @@ def sport_man_seeders(db) -> None:
 def event_seeders(db) -> None:
     db.add(ThirdParty(user_id=1))
     db.add(Sport(name="Ciclismo", code="CI"))
-    db.add(Event(third_party_id=1, city_id=1, sport_id=1, location="parque", date="2024-04-27T02:17", capacity=3, description="ningun", type="ROUTE"))
+    db.add(Event(third_party_id=1, city_id=1, sport_id=1, location="parque", date="2024-04-27T02:17", capacity=3,
+                 description="ningun", type="ROUTE", name="ningun"))
     db.commit()
 
 
@@ -27,13 +27,13 @@ event_data = {
     "location": "parque",
     "date": "2024-04-27T02:17",
     "capacity": 3,
+    "name": "ningun",
     "description": "ningun",
     "type": "ROUTE"
-  }
+}
 
 
 class TestEventRouter:
-
     def test_create_event(self, client, headers, sport_man_seeders):
         response = create_event(client, headers, event_data)
         assert response.status_code == 201
@@ -54,7 +54,7 @@ class TestEventRouter:
         updated_data["type"] = 'EVENT'
         response = update_sportsman(client, headers, 1, updated_data)
         assert response.status_code == 200
-        assert response.json()["type"] ==  'EVENT'
+        assert response.json()["type"] == 'EVENT'
 
     def test_get_event_by_invalid_id(self, client):
         response = client.get("/api/v1/auth/events/99999")
@@ -63,6 +63,11 @@ class TestEventRouter:
     def test_update_event_with_invalid_id(self, client):
         response = client.put("/api/v1/auth/sport_men/99999", json=event_data)
         assert response.status_code == 404
+
+    def test_get_event_by_third_party_id(self, client, headers, event_seeders):
+        response = get_event_by_third_party_id(client, headers=headers)
+        assert response.status_code == 200
+        assert response.json()[0]["id"] == 1
 
 
 def create_event(client, headers, event_data) -> Response:
@@ -83,3 +88,8 @@ def get_event_by_user_id(client, user_id, headers) -> Response:
 def update_sportsman(client, headers, sportsman_id, event_data) -> Response:
     result = client.put(f"/api/v1/auth/events/{sportsman_id}", headers=headers, json=event_data)
     return result
+
+
+def get_event_by_third_party_id(client, headers) -> Response:
+    events = client.get(f"/api/v1/auth/events/third_parties", headers=headers)
+    return events
