@@ -24,9 +24,9 @@ class ServicesService:
             repository = self.repository_factory.create_object(ServicesRepository)
             return repository.create(service, db)
 
-    def get_services(self, db: Session) -> List[ServiceResponseDTO]:
+    def get_services(self, is_inside_house: bool, db: Session) -> List[ServiceResponseDTO]:
         repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.get_all(db)
+        return repository.get_all(is_inside_house, db)
 
     def get_service_by_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)

@@ -5,6 +5,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 from app.modules.services.aplication.dto import EventResponseDTO, EventSportmanResponseDTO, ServiceResponseDTO
 from app.modules.services.domain.entities import EventSportman, Service, Event
+from app.modules.services.domain.enums.service_type_enum import ServiceTypesEnum
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
 
 
@@ -24,10 +25,14 @@ class ServicesRepositoryPostgres(ServicesRepository):
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-    def get_all(self, db: Session) -> List[ServiceResponseDTO]:
+    def get_all(self, is_inside_house: bool, db: Session) -> List[ServiceResponseDTO]:
         try:
-            third_parties = db.query(Service).all()
-            return third_parties
+            if is_inside_house is not None:
+                services = db.query(Service).filter(Service.is_inside_house == is_inside_house,
+                                                    Service.type == ServiceTypesEnum.ACCOMPANIMENT.value).all()
+            else:
+                services = db.query(Service).all()
+            return services
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
