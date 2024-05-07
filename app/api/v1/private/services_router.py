@@ -47,8 +47,7 @@ def deactivate_service(service_id: int, db: Session = Depends(get_db)):
 
 
 @service_router.get("", response_model=List[ServiceResponseDTO],
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])]
-                    )
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
 def get_services(db: Session = Depends(get_db)):
     services_service = ServicesService()
     services = services_service.get_services(db)
@@ -56,8 +55,7 @@ def get_services(db: Session = Depends(get_db)):
 
 
 @service_router.get("/{service_id}", response_model=ServiceResponseDTO,
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])]
-                    )
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
 def get_service_by_id(service_id: int = Path(ge=1), db: Session = Depends(get_db)):
     services_service = ServicesService()
     service = services_service.get_service_by_id(service_id, db)

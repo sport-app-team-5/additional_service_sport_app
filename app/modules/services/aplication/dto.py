@@ -6,6 +6,7 @@ from app.modules.services.domain.enums.service_type_enum import EventTypesEnum
 
 class ServiceRequestDTO(BaseModel):
     third_party_id: Optional[int] = None
+    is_inside_house: Optional[bool] = None
     type: str
     description: str
     is_active: bool
@@ -14,6 +15,7 @@ class ServiceRequestDTO(BaseModel):
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "third_party_id": 1,
+            "is_inside_house": True,
             "type": "TRANSPORT",
             "description": "Servicio exclusivo para carreras de más de 4 horas",
             "is_active": True,
@@ -26,6 +28,7 @@ class ServiceRequestDTO(BaseModel):
 class ServiceResponseDTO(BaseModel):
     id: int
     third_party_id: int
+    is_inside_house: Optional[bool]
     type: str
     description: str
     is_active: bool
@@ -89,15 +92,16 @@ class EventResponseDTO(BaseModel):
     type: EventTypesEnum
     model_config = ConfigDict(from_attributes=True)
 
+
 class AssociateSportmanEventRequestDTO(BaseModel):
     sportman_id: int
     event_id: int
 
     model_config = ConfigDict(json_schema_extra={
-         "example": {
-                "sportman_id": 1,
-                "event_id": 1
-            }
+        "example": {
+            "sportman_id": 1,
+            "event_id": 1
+        }
     })
 
 
@@ -105,4 +109,4 @@ class EventSportmanResponseDTO(BaseModel):
     id: int
     event_id: int
     sportman_id: int
-    model_config = ConfigDict(from_attributes=True) 
+    model_config = ConfigDict(from_attributes=True)

@@ -34,7 +34,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
     def create(self, entity: Service, db: Session) -> ServiceResponseDTO:
         try:
             service = Service(third_party_id=entity.third_party_id, type=entity.type, description=entity.description,
-                              is_active=entity.is_active, cost=entity.cost)
+                              is_active=entity.is_active, cost=entity.cost, is_inside_house=entity.is_inside_house)
             db.add(service)
             db.commit()
             return service
