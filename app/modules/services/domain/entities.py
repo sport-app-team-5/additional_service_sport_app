@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from sqlalchemy import Float, String, DateTime, Boolean, ForeignKey, Integer
@@ -10,7 +12,8 @@ class Service(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     third_party_id: Mapped[int] = mapped_column(ForeignKey("third_party.id"), index=True)
-    type: Mapped[str] = mapped_column(String(30))
+    is_inside_house: Mapped[bool] = mapped_column(Boolean)
+    type: Mapped[Optional[str]] = mapped_column(String(30))
     description: Mapped[str] = mapped_column(String(512))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     cost: Mapped[float] = mapped_column(Float)

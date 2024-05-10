@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, Path, Security, status
+from fastapi import APIRouter, Depends, Path, Security, status, Query
 from sqlalchemy.orm import Session
 from app.config.db import get_db
 from app.modules.auth.domain.enums.permission_enum import PermissionEnum
@@ -47,17 +47,15 @@ def deactivate_service(service_id: int, db: Session = Depends(get_db)):
 
 
 @service_router.get("", response_model=List[ServiceResponseDTO],
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])]
-                    )
-def get_services(db: Session = Depends(get_db)):
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
+def get_services(is_inside_house: bool = Query(None), db: Session = Depends(get_db)):
     services_service = ServicesService()
-    services = services_service.get_services(db)
+    services = services_service.get_services(is_inside_house, db)
     return services
 
 
 @service_router.get("/{service_id}", response_model=ServiceResponseDTO,
-                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])]
-                    )
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
 def get_service_by_id(service_id: int = Path(ge=1), db: Session = Depends(get_db)):
     services_service = ServicesService()
     service = services_service.get_service_by_id(service_id, db)

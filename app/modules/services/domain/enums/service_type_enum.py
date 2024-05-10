@@ -11,7 +11,8 @@ class ServiceTypesEnum(str, Enum):
         obj._value_ = code
         obj.desc = desc
         return obj
-    
+
+
 class EventTypesEnum(Enum):
     ROUTE = "ROUTE"
     EVENT = "EVENT"
