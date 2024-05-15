@@ -1,11 +1,13 @@
 import pytest
 from httpx import Response
+from app.modules.services.domain.entities import Service
 from app.modules.third_party.domain.entities import ThirdParty
 
 
 @pytest.fixture
 def third_party_seeders(db) -> None:
     db.add(ThirdParty(user_id=1))
+    db.add(Service(third_party_id=1, is_inside_house=False, type="SPORT_SPECIALIST", description="Servicio exclusivo para carreras de más de 4 horas", is_active=True, cost=25.90))
     db.commit()
 
 
@@ -14,7 +16,7 @@ def service_data() -> dict:
     return {
         "third_party_id": 1,
         "is_inside_house": False,
-        "type": "TRANSPORT",
+        "type": "SPORT_SPECIALIST",
         "description": "Servicio exclusivo para carreras de más de 4 horas",
         "is_active": True,
         "cost": 25.90
@@ -64,7 +66,6 @@ class TestCreateServiceRouter:
         assert "detail" in response_json
         assert "body" in response_json["detail"][0]["loc"]
 
-
 class TestGetServiceRouter:
     def test_get_service(self, client, headers, third_party_seeders, service_data):
         service_created = create_service(client, service_data, headers)
@@ -104,6 +105,30 @@ class TestGetServicesRouter:
 
         assert service.status_code == 200
         assert [] == service.json()
+
+    def test_get_service_by_type(self, client, headers, third_party_seeders):
+        service_type = "SPORT_SPECIALIST"
+        response = get_service_by_type(client, service_type, headers)
+        response_json = response.json()
+
+        assert response.status_code == 200
+        assert "cost" in response_json[0]
+
+    def test_get_service_with_invalid_type(self, client, headers, third_party_seeders):
+        service_type = ""
+        response = get_service_by_type(client, service_type, headers)
+        response_json = response.json()
+
+        assert response.status_code == 422
+        assert "detail" in response_json
+
+    def test_get_service_no_exists(self, client, headers, third_party_seeders):
+        service_type = "TEST"
+        response = get_service_by_type(client, service_type, headers)
+        response_json = response.json()
+
+        assert response.status_code == 200
+        assert response_json.__len__() == 0    
 
 
 class TestDeactivateServiceRouter:
@@ -148,6 +173,10 @@ def deactivate_service(client, service_id, headers) -> Response:
 
 def get_service(client, service_id, headers) -> Response:
     service = client.get(f"/api/v1/auth/services/{service_id}", headers=headers)
+    return service
+
+def get_service_by_type(client, service_type, headers) -> Response:
+    service = client.get(f"/api/v1/auth/services/type/{service_type}", headers=headers)
     return service
 
 

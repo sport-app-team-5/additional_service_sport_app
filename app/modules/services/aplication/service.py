@@ -32,6 +32,10 @@ class ServicesService:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.get_by_id(service_id, db)
     
+    def get_service_by_type(self, type: str, db: Session) -> List[ServiceResponseDTO]:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.get_by_type(type, db)
+    
     def update_service(self, service_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.update(service_id, service, db)

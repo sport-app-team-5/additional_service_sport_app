@@ -53,6 +53,12 @@ def get_services(is_inside_house: bool = Query(None), db: Session = Depends(get_
     services = services_service.get_services(is_inside_house, db)
     return services
 
+@service_router.get("/type/{service_type}", response_model=List[ServiceResponseDTO],
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
+def get_service_by_type(service_type: str, db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    services = services_service.get_service_by_type(service_type, db)
+    return services
 
 @service_router.get("/{service_id}", response_model=ServiceResponseDTO,
                     dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])

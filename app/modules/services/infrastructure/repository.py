@@ -20,8 +20,19 @@ class ServicesRepositoryPostgres(ServicesRepository):
 
     def get_by_id(self, entity_id: int, db: Session) -> ServiceResponseDTO:
         try:
-            service = self.__validate_exist_Service(entity_id, db)
+            service = self.__validate_exist_Service(entity_id, db)            
             return service
+            
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
+    def get_by_type(self, service_type: str, db: Session) -> List[ServiceResponseDTO]:
+        try:
+            services = db.query(Service).filter(Service.type == service_type).all()
+            if services is not None:
+                return services
+            else:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Service not found by type {service_type}")
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
