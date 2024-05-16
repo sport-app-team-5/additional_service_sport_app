@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from app.config.db import get_db
 from app.modules.auth.domain.enums.permission_enum import PermissionEnum
 from app.modules.auth.domain.service import AuthService
-from app.modules.services.aplication.dto import ServiceRequestDTO, ServiceResponseDTO
+from app.modules.services.aplication.dto import NotificationRequestDTO, NotificationResponseDTO, ScheduleAppointmentRequestDTO, ServiceRequestDTO, ServiceResponseDTO
 from app.modules.services.aplication.service import ServicesService
 from app.seedwork.presentation.jwt import get_current_user_id, oauth2_scheme
 
@@ -49,8 +49,9 @@ def deactivate_service(service_id: int, db: Session = Depends(get_db)):
 @service_router.get("", response_model=List[ServiceResponseDTO],
                     dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
 def get_services(is_inside_house: bool = Query(None), db: Session = Depends(get_db)):
+    user_id: int = Depends(get_current_user_id)    
     services_service = ServicesService()
-    services = services_service.get_services(is_inside_house, db)
+    services = services_service.get_services(is_inside_house, user_id, db)
     return services
 
 @service_router.get("/type/{service_type}", response_model=List[ServiceResponseDTO],
@@ -66,3 +67,38 @@ def get_service_by_id(service_id: int = Path(ge=1), db: Session = Depends(get_db
     services_service = ServicesService()
     service = services_service.get_service_by_id(service_id, db)
     return service
+
+@service_router.post("/appointment", response_model=ServiceResponseDTO,
+                     dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])],
+                     status_code=status.HTTP_201_CREATED)
+def create_schedule_appointment(appointment: ScheduleAppointmentRequestDTO,
+                   db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    service_created = services_service.create_scheudule_appointment(appointment, db)
+    return service_created
+
+@service_router.post("/notification", response_model=NotificationResponseDTO,
+                        dependencies=[Security(authorized, scopes=[PermissionEnum.CREATE_NOTIFICATION.code])],
+                        status_code=status.HTTP_201_CREATED)
+def create_notification(notification: NotificationRequestDTO,
+                        db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    notification_created = services_service.create_notification(notification, db)
+    return notification_created
+
+
+@service_router.get("/notification", response_model=List[NotificationResponseDTO],
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.READ_NOTIFICATION.code])])
+def get_notification_by_status_and_type(status: str, type: str, db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    notifications = services_service.get_notification_by_status_and_type(status, type, db)
+    return notifications
+
+
+@service_router.put("/notification/{notification_id}", response_model=NotificationResponseDTO,
+                    dependencies=[Security(authorized, scopes=[PermissionEnum.UPDATE_NOTIFICATION.code])],
+                    status_code=status.HTTP_200_OK)
+def update_notification_status(notification_id: int, status: str, db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    notification_updated = services_service.update_notification_status(notification_id, status, db)
+    return notification_updated

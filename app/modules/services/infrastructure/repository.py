@@ -3,10 +3,15 @@ from fastapi import HTTPException, status
 from sqlalchemy import exists
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
-from app.modules.services.aplication.dto import EventResponseDTO, EventSportmanResponseDTO, ServiceResponseDTO
-from app.modules.services.domain.entities import EventSportman, Service, Event
+from app.modules.services.aplication.dto import EventResponseDTO, EventSportmanResponseDTO, ScheduleAppointmentResponseDTO, ServiceResponseDTO
+from app.modules.services.domain.entities import EventSportman, Service, Event, ServiceSportman
 from app.modules.services.domain.enums.service_type_enum import ServiceTypesEnum
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
+from app.modules.services.domain.entities import Notification
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
+from fastapi import HTTPException, status
+from typing import List
 
 
 class ServicesRepositoryPostgres(ServicesRepository):
@@ -46,6 +51,14 @@ class ServicesRepositoryPostgres(ServicesRepository):
             return services
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
+    def get_all(self, third_party_id: int, db: Session) -> List[ServiceResponseDTO]:
+        try:
+            if third_party_id is not None:
+                services = db.query(Service).filter(Service.third_party_id == third_party_id).all()            
+                return services
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))    
 
     def create(self, entity: Service, db: Session) -> ServiceResponseDTO:
         try:
@@ -205,9 +218,53 @@ class EventRepositoryPostgres(EventRepository):
                 return []
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))        
+        
     def get_by_third_party_id(self, third_party_id: int, db: Session) -> List[EventResponseDTO]:
         try:
             events = db.query(Event).filter(Event.third_party_id == third_party_id).all()
             return events
         except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
+    def create_scheduler_appointment(self, entity: ServiceSportman, db: Session) -> ScheduleAppointmentResponseDTO:
+        try:
+            service_sportman = ServiceSportman(service_id = entity.service_id, sportman_id = entity.sportman_id, sport = entity.sport, injury_id = entity.injury_id, appointment_date = entity.appointment_date)
+            
+            db.add(service_sportman)
+            db.commit()
+            
+            return service_sportman
+            
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    def create_notification(self, entity: Notification, db: Session) -> Notification:
+        try:
+            notification = Notification(status=entity.status, type=entity.type, message=entity.message)
+            db.add(notification)
+            db.commit()
+            return notification
+        except SQLAlchemyError as e:
+            db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    def get_notification_by_status_and_type(self, status: str, type: str, db: Session) -> List[Notification]:
+        try:
+            notifications = db.query(Notification).filter(Notification.status == status, Notification.type == type).all()
+            return notifications
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+    def update_notification_status(self, notification_id: int, status: str, db: Session) -> Notification:
+        try:
+            notification = db.query(Notification).filter(Notification.id == notification_id).one_or_none()
+            if notification:
+                notification.status = status
+                db.commit()
+                return notification
+            else:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found")
+        except SQLAlchemyError as e:
+            db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
