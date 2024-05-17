@@ -100,10 +100,10 @@ def get_notification_by_status_and_type(status: str, type: str, db: Session = De
     return notifications
 
 
-@service_router.put("/notification/user/{notification_id}", 
+@service_router.put("/notification/user", 
                     dependencies=[Security(authorized, scopes=[PermissionEnum.UPDATE_USER.code])],
                     status_code=status.HTTP_200_OK)
-def update_notification_status(notification_id: int, entity: NotificationRequestDTO, db: Session = Depends(get_db)):
+def update_notification_status(entity: NotificationRequestDTO, db: Session = Depends(get_db)):
     services_service = ServicesService()
     notification_updated = services_service.update_notification_status(entity.type, db)
     return notification_updated

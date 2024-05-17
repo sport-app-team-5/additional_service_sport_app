@@ -118,7 +118,7 @@ class TestCreateServiceRouter:
         notification_data = {
             "type": "IALE",
         }
-        response = update_notification_status(client, notification_id, notification_data, headers )
+        response = update_notification_status(client, notification_data, headers )
 
         assert response.status_code == 200
 
@@ -258,8 +258,8 @@ def get_notification_by_status_and_type(client, status, type, headers) -> Respon
     response = client.get(f"/api/v1/auth/services/notifications/user?status={status}&type={type}", headers=headers)        
     return response
 
-def update_notification_status(client, notification_id, data, headers) -> Response:
-    response = client.put(f"/api/v1/auth/services/notification/user/{notification_id}", headers=headers, json=data)
+def update_notification_status(client, data, headers) -> Response:
+    response = client.put("/api/v1/auth/services/notification/user", headers=headers, json=data)
     return response
 
 
