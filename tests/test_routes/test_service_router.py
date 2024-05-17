@@ -126,7 +126,7 @@ class TestCreateServiceRouter:
         response_json = response.json()
 
         assert response.status_code == 200
-        # assert "id" in response_json
+        assert "id" in response_json
 
 class TestGetServiceRouter:
     def test_get_service(self, client, headers, third_party_seeders, service_data):
