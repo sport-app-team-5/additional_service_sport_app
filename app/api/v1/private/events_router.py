@@ -6,6 +6,7 @@ from app.modules.auth.domain.enums.permission_enum import PermissionEnum
 from app.modules.auth.domain.service import AuthService
 from app.modules.services.aplication.dto import EventRequestDTO, EventResponseDTO, EventSportmanResponseDTO, EventUpdateRequestDTO, AssociateSportmanEventRequestDTO
 from app.modules.services.aplication.service import EventService
+from app.modules.third_party.aplication.service import ThirdPartyService
 from app.seedwork.presentation.jwt import get_current_user_id, oauth2_scheme
 
 auth_service = AuthService()
@@ -47,9 +48,9 @@ def update_event(event_id: int, event: EventUpdateRequestDTO, db: Session = Depe
 
 @event_router.get("", response_model=List[EventResponseDTO],
                   dependencies=[Security(authorized, scopes=[PermissionEnum.READ_SERVICE.code])])
-def get_events(db: Session = Depends(get_db)):
+def get_events(db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     event_event = EventService()
-    events = event_event.get_events(db)
+    events = event_event.get_events(user_id, db)
     return events
 
 

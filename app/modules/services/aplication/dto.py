@@ -110,3 +110,51 @@ class EventSportmanResponseDTO(BaseModel):
     event_id: int
     sportman_id: int
     model_config = ConfigDict(from_attributes=True)
+
+@dataclass(frozen=True)
+class ScheduleAppointmentRequestDTO(BaseModel):
+    sportman_id: int
+    service_id: int
+    injury_id: str
+    sport: str
+    appointment_date: str
+    model_config = ConfigDict(json_schema_extra={
+        "example": {
+            "sportman_id": 1,
+            "service_id": 1,
+            "injury_id": "Notificación de prueba",
+            "sport": "Ciclyn",
+            "appointment_date": "2024-05-16"            
+        }
+    })
+
+@dataclass(frozen=True)
+class ScheduleAppointmentResponseDTO(BaseModel):
+    id: int
+    sportman_id: int
+    service_id: int
+    injury_id: str
+    sport: str
+    appointment_date: str
+    model_config = ConfigDict(from_attributes=True)  
+
+
+class NotificationRequestDTO(BaseModel):
+    message: str
+    status: str
+    type: str
+    model_config = ConfigDict(json_schema_extra={
+        "example": {
+            "id": 1,
+            "message": "Notificación de prueba",
+            "type": "IALE",
+            "status": "UNREAD"            
+        }
+    })
+
+class NotificationResponseDTO(BaseModel):
+    id: int
+    message: str
+    status: str
+    type: str
+    model_config = ConfigDict(from_attributes=True)
