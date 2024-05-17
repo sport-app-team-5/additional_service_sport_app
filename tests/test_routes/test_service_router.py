@@ -76,7 +76,7 @@ class TestCreateServiceRouter:
         appointment_data = {
             "sportman_id": 1,
             "service_id": 1,
-            "injury_id": "Notificación de prueba",
+            "injury_id": 1,
             "sport": "Ciclyn",
             "appointment_date":  "2024-05-16" 
         }
@@ -87,7 +87,6 @@ class TestCreateServiceRouter:
 
         assert response.status_code == 201
         assert "id" in response_json
-        # Add additional assertions as needed
 
 
     def test_create_notification(self, client, headers):
@@ -102,10 +101,9 @@ class TestCreateServiceRouter:
 
         assert response.status_code == 201
         assert "id" in response_json
-        # Add additional assertions as needed
 
 
-    def test_get_notification_by_status_and_type(self, client, headers, notification_seeders):
+    def test_get_notification_by_invalid_status_and_type(self, client, headers, notification_seeders):
         status = "INVALID"
         notification_type = "IALE"
         response = get_notification_by_status_and_type(client, status, notification_type, headers)
