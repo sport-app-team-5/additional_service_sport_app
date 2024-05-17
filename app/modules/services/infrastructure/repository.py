@@ -135,13 +135,15 @@ class ServicesRepositoryPostgres(ServicesRepository):
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-    def update_notification_status(self, notification_id: int, status: str, db: Session) -> Notification:
+    def update_notification_status(self, notification_id: int, type: str, db: Session):
+        status = "READED"
         try:
-            notification = db.query(Notification).filter(Notification.id == notification_id).one_or_none()
-            if notification:
-                notification.status = status
-                db.commit()
-                return notification
+            notifications = db.query(Notification).filter(Notification.type == type).all()
+            if notifications:
+                for notification in notifications:              
+                    notification.status = status
+                    db.commit()
+                return []
             else:
                 raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Notification not found")
         except SQLAlchemyError as e:

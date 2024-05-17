@@ -87,8 +87,6 @@ class TestCreateServiceRouter:
 
         assert response.status_code == 201
         assert "id" in response_json
-        # Add additional assertions as needed
-
 
     def test_create_notification(self, client, headers):
         notification_data = {
@@ -102,8 +100,6 @@ class TestCreateServiceRouter:
 
         assert response.status_code == 201
         assert "id" in response_json
-        # Add additional assertions as needed
-
 
     def test_get_notification_by_status_and_type(self, client, headers, notification_seeders):
         status = "INVALID"
@@ -118,15 +114,11 @@ class TestCreateServiceRouter:
     def test_update_notification_status(self, client, headers, notification_seeders):
         notification_id = "1"
         notification_data = {
-            "message": "Notificación de prueba",
             "type": "IALE",
-            "status": "UNREAD"
         }
         response = update_notification_status(client, notification_id, notification_data, headers )
-        response_json = response.json()
 
         assert response.status_code == 200
-        assert "id" in response_json
 
 class TestGetServiceRouter:
     def test_get_service(self, client, headers, third_party_seeders, service_data):

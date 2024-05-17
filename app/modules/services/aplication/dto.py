@@ -140,8 +140,8 @@ class ScheduleAppointmentResponseDTO(BaseModel):
 
 
 class NotificationRequestDTO(BaseModel):
-    message: str
-    status: str
+    message: Optional[str] = None
+    status: Optional[str] = None
     type: str
     model_config = ConfigDict(json_schema_extra={
         "example": {
