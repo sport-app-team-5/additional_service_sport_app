@@ -114,7 +114,7 @@ class TestCreateServiceRouter:
 
 
     def test_update_notification_status(self, client, headers, notification_seeders):
-        notification_id = "1"
+        
         notification_data = {
             "type": "IALE",
         }
