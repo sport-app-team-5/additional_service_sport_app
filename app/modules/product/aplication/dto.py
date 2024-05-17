@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 from pydantic import ConfigDict, BaseModel
 
 
@@ -9,13 +9,19 @@ class ProductRequestDTO(BaseModel):
     name: str
     cost: float
     third_party_id: Optional[int] = None
+    allergies: Optional[str] = None
+    category_food: Optional[str] = None
 
     model_config = ConfigDict(json_schema_extra={
         "example": {
-            "category": "Suplementos",
-            "description": "Proteina en polvo a base de suero de leche",
+            "category": "Food",
+            "description": "Cominda en polvo a base de suero de leche",
             "name": "Proteina",
-            "cost": 100000
+            "cost": 100000,
+            "allergies": "Gluten,Peanuts,Shellfish,Soy",
+            "category_food": "Productos lácteos",
+            "third_party_id": 1,
+
         }
     })
 
@@ -23,10 +29,11 @@ class ProductRequestDTO(BaseModel):
 @dataclass(frozen=True)
 class ProductResponseDTO(BaseModel):
     id: int
-    third_party_id: int
     category: str
     description: str
     name: str
-    is_active: bool
     cost: float
+    third_party_id: Optional[int] = None
+    allergies: Optional[str] = None
+    category_food: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
