@@ -17,7 +17,7 @@ class ServicesService:
 
     def create_service(self, user_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
         third_party_service = ThirdPartyService()
-        if(service.is_inside_house is None):
+        if service.is_inside_house is None:
             service.is_inside_house = False
         third_party = third_party_service.get_third_party_by_user_id(user_id, db)
         
@@ -59,7 +59,6 @@ class ServicesService:
         return repository.create_scheduler_appointment(appointment, db)
     
     def create_notification(self, entity: NotificationRequestDTO, db: Session) -> NotificationResponseDTO:
-        print(entity)
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.create_notification(entity, db)
 
@@ -87,6 +86,9 @@ class EventService:
         if third_party:
             event.third_party_id = third_party.id
             repository = self.repository_factory.create_object(EventRepository)
+            services_service = ServicesService()
+            notification = NotificationRequestDTO(message=event.name, type="ENEW", status="UNREAD")
+            services_service.create_notification(notification, db)
             return repository.create(event, db)
 
     def get_events(self, user_id: int, db: Session) -> List[EventResponseDTO]:
