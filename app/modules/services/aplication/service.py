@@ -53,6 +53,23 @@ class ServicesService:
     def deactivate(self, service_id: int, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.deactivate(service_id, db)
+    
+    def create_schedule_appointment(self, appointment: ScheduleAppointmentRequestDTO, db: Session) -> ScheduleAppointmentResponseDTO:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.create_scheduler_appointment(appointment, db)
+    
+    def create_notification(self, entity: NotificationRequestDTO, db: Session) -> NotificationResponseDTO:
+        print(entity)
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.create_notification(entity, db)
+
+    def get_notification_by_status_and_type(self, status: str, type: str, db: Session) -> List[NotificationResponseDTO]:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.get_notification_by_status_and_type(status, type, db)
+
+    def update_notification_status(self, notification_id: int, status: str, db: Session) -> NotificationResponseDTO:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.update_notification_status(notification_id, status, db)
 
 
 class EventService:
@@ -113,19 +130,3 @@ class EventService:
     def get_suscribed_events(self, sportman_id, initial_date, final_date, db: Session) -> List[EventResponseDTO]:
         repository = self.repository_factory.create_object(EventRepository)
         return repository.get_suscribed_events(sportman_id, initial_date, final_date, db)
-    
-    def create_schedule_appointment(self, appointment: ScheduleAppointmentRequestDTO, db: Session) -> ScheduleAppointmentResponseDTO:
-        repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.create(appointment, db)
-    
-    def create_notification(self, entity: NotificationRequestDTO, db: Session) -> NotificationResponseDTO:
-        repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.create_notification(entity, db)
-
-    def get_notification_by_status_and_type(self, status: str, type: str, db: Session) -> List[NotificationResponseDTO]:
-        repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.get_notification_by_status_and_type(status, type, db)
-
-    def update_notification_status(self, notification_id: int, status: str, db: Session) -> NotificationResponseDTO:
-        repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.get_notification_by_status_and_type(notification_id, status, type, db)

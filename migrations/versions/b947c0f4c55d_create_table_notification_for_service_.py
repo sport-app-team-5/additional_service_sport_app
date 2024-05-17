@@ -25,7 +25,8 @@ def upgrade() -> None:
         sa.Column('type', sa.String(30)),
         sa.Column('status', sa.String(30)),
         sa.Column('created_at', sa.DateTime, default=sa.func.now()),
-        sa.Column('updated_at', sa.DateTime, default=sa.func.now())        
+        sa.Column('updated_at', sa.DateTime, default=sa.func.now())  
+              
     )
 
 

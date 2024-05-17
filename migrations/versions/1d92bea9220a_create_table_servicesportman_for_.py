@@ -20,11 +20,11 @@ def upgrade() -> None:
     op.create_table(
         'service_sportman',
         sa.Column('id', sa.Integer, primary_key=True, index=True),
-        sa.Column('service_id', sa.Integer, sa.ForeignKey("event.id"), index=True),
+        sa.Column('service_id', sa.Integer, sa.ForeignKey("service.id"), index=True),
         sa.Column('sportman_id', sa.Integer),
         sa.Column('sport', sa.String(30)),
         sa.Column('injury_id', sa.Integer),
-        sa.Column('appointment_date', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP')),
+        sa.Column('appointment_date', sa.String(30)),
         sa.Column('created_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP')),
         sa.Column('updated_at', sa.DateTime, default=sa.text('CURRENT_TIMESTAMP'), onupdate=sa.text('CURRENT_TIMESTAMP'))
     )
