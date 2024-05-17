@@ -72,3 +72,32 @@ class EventSportman(Base):
     event: Mapped["Event"] = relationship()
     def __str__(self):
         return self.name
+
+class ServiceSportman(Base):
+    __tablename__ = 'service_sportman'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    service_id: Mapped[int] =  mapped_column(ForeignKey("service.id"), index=True)
+    sportman_id: Mapped[int] = mapped_column(Integer)
+    sport: Mapped[str] = mapped_column(String(30))
+    injury_id: Mapped[int] = mapped_column(Integer)
+    appointment_date: Mapped[str] = mapped_column(String(30))
+    created_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    service: Mapped["Service"] = relationship()
+    def __str__(self):
+        return self.name
+    
+class Notification(Base):
+    __tablename__ = 'notification'
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    message: Mapped[str] = mapped_column(String(30))
+    type: Mapped[str] = mapped_column(String(30))
+    status: Mapped[str] = mapped_column(String(30))    
+    created_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow)
+    updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def __str__(self):
+        return self.name    

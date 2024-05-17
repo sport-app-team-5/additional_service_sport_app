@@ -5,6 +5,7 @@ class ServiceTypesEnum(str, Enum):
     TRANSPORT = ("TRANSPORT", "Transporte")
     ACCOMPANIMENT = ("ACCOMPANIMENT", "Acompañamiento")
     MECANIC = ("MECANIC", "Mecánica")
+    SPORT_SPECIALIST = ("SPORT_SPECIALIST", "Deportólogo")
 
     def __new__(cls, code, desc):
         obj = str.__new__(cls)

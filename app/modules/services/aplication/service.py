@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy.orm import Session
-from app.modules.services.aplication.dto import (AssociateSportmanEventRequestDTO, EventRequestDTO, EventResponseDTO, EventSportmanResponseDTO, EventUpdateRequestDTO,
+from app.modules.services.aplication.dto import (AssociateSportmanEventRequestDTO, EventRequestDTO, EventResponseDTO, EventSportmanResponseDTO, EventUpdateRequestDTO, NotificationRequestDTO, NotificationResponseDTO, ScheduleAppointmentRequestDTO, ScheduleAppointmentResponseDTO,
                                                  ServiceRequestDTO, ServiceResponseDTO)
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
 from app.modules.services.infrastructure.factories import RepositoryFactory
@@ -17,6 +17,8 @@ class ServicesService:
 
     def create_service(self, user_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
         third_party_service = ThirdPartyService()
+        if service.is_inside_house is None:
+            service.is_inside_house = False
         third_party = third_party_service.get_third_party_by_user_id(user_id, db)
         
         if third_party:
@@ -24,13 +26,25 @@ class ServicesService:
             repository = self.repository_factory.create_object(ServicesRepository)
             return repository.create(service, db)
 
-    def get_services(self, is_inside_house: bool, db: Session) -> List[ServiceResponseDTO]:
+    def get_services(self, is_inside_house: bool, user_id: int, db: Session) -> List[ServiceResponseDTO]:
+        third_party_service = ThirdPartyService()
+        third_party = third_party_service.get_third_party_by_user_id(user_id, db)
+        
         repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.get_all(is_inside_house, db)
+        if third_party:
+            services = repository.get_all(third_party.id, db)
+        else :
+            services = repository.get_all(is_inside_house, db)
+
+        return services
 
     def get_service_by_id(self, service_id: int, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.get_by_id(service_id, db)
+    
+    def get_service_by_type(self, type: str, db: Session) -> List[ServiceResponseDTO]:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.get_by_type(type, db)
     
     def update_service(self, service_id: int, service: ServiceRequestDTO, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
@@ -39,6 +53,22 @@ class ServicesService:
     def deactivate(self, service_id: int, db: Session) -> ServiceResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.deactivate(service_id, db)
+    
+    def create_schedule_appointment(self, appointment: ScheduleAppointmentRequestDTO, db: Session) -> ScheduleAppointmentResponseDTO:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.create_scheduler_appointment(appointment, db)
+    
+    def create_notification(self, entity: NotificationRequestDTO, db: Session) -> NotificationResponseDTO:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.create_notification(entity, db)
+
+    def get_notification_by_status_and_type(self, status: str, type: str, db: Session) -> List[NotificationResponseDTO]:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.get_notification_by_status_and_type(status, type, db)
+
+    def update_notification_status(self, notification_id: int, status: str, db: Session) -> NotificationResponseDTO:
+        repository = self.repository_factory.create_object(ServicesRepository)
+        return repository.update_notification_status(notification_id, status, db)
 
 
 class EventService:
@@ -56,11 +86,23 @@ class EventService:
         if third_party:
             event.third_party_id = third_party.id
             repository = self.repository_factory.create_object(EventRepository)
+            services_service = ServicesService()
+            notification = NotificationRequestDTO(message=event.name, type="ENEW", status="UNREAD")
+            services_service.create_notification(notification, db)
             return repository.create(event, db)
 
-    def get_events(self, db: Session) -> List[EventResponseDTO]:
+    def get_events(self, user_id: int, db: Session) -> List[EventResponseDTO]:
+        third_party_service = ThirdPartyService()
+        third_party = third_party_service.get_third_party_by_user_id(user_id, db)
+        
         repository = self.repository_factory.create_object(EventRepository)
-        return repository.get_all(db)
+
+        if third_party:        
+            events = repository.get_by_third_party_id(third_party.id, db)
+        else:   
+            events = repository.get_all(db)
+        
+        return events
 
     def get_event_by_id(self, event_id: int, db: Session) -> List[EventResponseDTO]:
         repository = self.repository_factory.create_object(EventRepository)

@@ -1,3 +1,4 @@
+from typing import List
 from sqlalchemy.orm import Session
 from app.modules.product.aplication.dto import ProductRequestDTO, ProductResponseDTO
 from app.modules.product.domain.repository import ProductRepository
@@ -19,3 +20,11 @@ class ProductService:
         product.third_party_id = third_party.id
         repository = self.repository_factory.create_object(ProductRepository)
         return repository.create(product, db)
+
+    def get_by_id(self, user_id: int, db: Session) -> List[ProductResponseDTO]:
+        repository = self.repository_factory.create_object(ProductRepository)
+        return repository.get_by_id(user_id, db)
+    
+    def get_all(self, category:str, db: Session) -> List[ProductResponseDTO]:
+        repository = self.repository_factory.create_object(ProductRepository)
+        return repository.get_all(category, db)
