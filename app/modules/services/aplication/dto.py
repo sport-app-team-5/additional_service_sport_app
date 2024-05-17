@@ -115,14 +115,14 @@ class EventSportmanResponseDTO(BaseModel):
 class ScheduleAppointmentRequestDTO(BaseModel):
     sportman_id: int
     service_id: int
-    injury_id: str
+    injury_id: int
     sport: str
     appointment_date: str
     model_config = ConfigDict(json_schema_extra={
         "example": {
             "sportman_id": 1,
             "service_id": 1,
-            "injury_id": "Notificación de prueba",
+            "injury_id": 1,
             "sport": "Ciclyn",
             "appointment_date": "2024-05-16"            
         }
@@ -133,15 +133,15 @@ class ScheduleAppointmentResponseDTO(BaseModel):
     id: int
     sportman_id: int
     service_id: int
-    injury_id: str
+    injury_id: int
     sport: str
     appointment_date: str
     model_config = ConfigDict(from_attributes=True)  
 
 
 class NotificationRequestDTO(BaseModel):
-    message: str
-    status: str
+    message: Optional[str] = None
+    status: Optional[str] = None
     type: str
     model_config = ConfigDict(json_schema_extra={
         "example": {

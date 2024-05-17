@@ -66,9 +66,9 @@ class ServicesService:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.get_notification_by_status_and_type(status, type, db)
 
-    def update_notification_status(self, notification_id: int, status: str, db: Session) -> NotificationResponseDTO:
+    def update_notification_status(self, status: str, db: Session):
         repository = self.repository_factory.create_object(ServicesRepository)
-        return repository.update_notification_status(notification_id, status, db)
+        return repository.update_notification_status(status, db)
 
 
 class EventService:
