@@ -11,6 +11,9 @@ class Product(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     third_party_id: Mapped[int] = mapped_column(ForeignKey("third_party.id"), index=True)
     category: Mapped[str] = mapped_column(String(30))
+    allergies: Mapped[str] = mapped_column(String(512) ,nullable=True)
+
+    category_food: Mapped[str] = mapped_column(String(30) ,nullable=True)
     description: Mapped[str] = mapped_column(String(512))
     name: Mapped[str] = mapped_column(String(100))
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
