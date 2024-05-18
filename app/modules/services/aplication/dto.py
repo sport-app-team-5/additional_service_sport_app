@@ -132,7 +132,7 @@ class ScheduleAppointmentRequestDTO(BaseModel):
 class ScheduleAppointmentResponseDTO(BaseModel):
     id: int
     sportman_id: int
-    service_id: int
+    service_name: str
     injury_id: int
     sport: str
     appointment_date: str

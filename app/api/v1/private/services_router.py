@@ -72,7 +72,7 @@ def get_service_by_id(service_id: int = Path(ge=1), db: Session = Depends(get_db
     return service
 
 
-@service_router.post("/appointment", response_model=ScheduleAppointmentResponseDTO,
+@service_router.post("/appointment",
                      dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])],
                      status_code=status.HTTP_201_CREATED)
 def create_schedule_appointment(appointment: ScheduleAppointmentRequestDTO,
@@ -81,6 +81,12 @@ def create_schedule_appointment(appointment: ScheduleAppointmentRequestDTO,
     service_created = services_service.create_schedule_appointment(appointment, db)
     return service_created
 
+@service_router.get("/appointment/{sportman_id}", response_model=List[ScheduleAppointmentResponseDTO],
+                        dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])])
+def get_appointments(sportman_id: int, db: Session = Depends(get_db)):
+    services_service = ServicesService()
+    appointments = services_service.get_schedule_appointments(sportman_id, db)
+    return appointments
 
 @service_router.post("/notification", response_model=NotificationResponseDTO,
                      dependencies=[Security(authorized, scopes=[PermissionEnum.READ_USER.code])],
