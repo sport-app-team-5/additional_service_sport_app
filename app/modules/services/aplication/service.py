@@ -5,6 +5,7 @@ from app.modules.services.aplication.dto import (AssociateSportmanEventRequestDT
 from app.modules.services.domain.repository import EventRepository, ServicesRepository
 from app.modules.services.infrastructure.factories import RepositoryFactory
 from app.modules.third_party.aplication.service import ThirdPartyService
+import random
 
 
 class ServicesService:
@@ -27,14 +28,18 @@ class ServicesService:
             return repository.create(service, db)
 
     def get_services(self, is_inside_house: bool, user_id: int, db: Session) -> List[ServiceResponseDTO]:
-        third_party_service = ThirdPartyService()
-        third_party = third_party_service.get_third_party_by_user_id(user_id, db)
         
+        try:
+            third_party_service = ThirdPartyService()
+            third_party = third_party_service.get_third_party_by_user_id(user_id, db)
+        except Exception:          
+            third_party = None   
+            
         repository = self.repository_factory.create_object(ServicesRepository)
         if third_party:
             services = repository.get_all(third_party.id, db)
         else :
-            services = repository.get_all(is_inside_house, db)
+            services = repository.get_all_in_house(is_inside_house, db)
 
         return services
 
@@ -131,9 +136,27 @@ class EventService:
         return repository.associate_event_sportman(user_id, association, db)
     
     def get_available_events(self, initial_date: str, final_date: str, city_id: int, db: Session) -> List[EventResponseDTO]:
+        intensity_levels = ["exerciseIntensityDown", "exerciseIntensityMedium", "exerciseIntensityHigh"]
+        times_levels = ["1h", "2h", "3h", "4h"]
+        
         repository = self.repository_factory.create_object(EventRepository)
-        return repository.get_available_events(initial_date, final_date, city_id, db)
+        available_events = repository.get_available_events(initial_date, final_date, city_id, db)
+
+        for available_event in available_events:
+            available_event.level = random.choice(intensity_levels)
+            available_event.time = random.choice(times_levels)
+
+        return available_events
     
     def get_suscribed_events(self, sportman_id, initial_date, final_date, db: Session) -> List[EventResponseDTO]:
+        intensity_levels = ["exerciseIntensityDown", "exerciseIntensityMedium", "exerciseIntensityHigh"]
+        times_levels = ["1h", "2h", "3h", "4h"]
+
         repository = self.repository_factory.create_object(EventRepository)
-        return repository.get_suscribed_events(sportman_id, initial_date, final_date, db)
+        suscribed_events = repository.get_suscribed_events(sportman_id, initial_date, final_date, db)
+        
+        for suscribed_event in suscribed_events:
+            suscribed_event.level = random.choice(intensity_levels)
+            suscribed_event.time = random.choice(times_levels)
+            
+        return suscribed_events
