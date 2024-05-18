@@ -104,7 +104,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
         
-    def create_scheduler_appointment(self, entity: ServiceSportman, db: Session) -> ScheduleAppointmentResponseDTO:
+    def create_scheduler_appointment(self, entity: ServiceSportman, db: Session):
         try:
             service_sportman = ServiceSportman(service_id = entity.service_id, sportman_id = entity.sportman_id, sport = entity.sport, 
                                                injury_id = entity.injury_id, appointment_date = entity.appointment_date)
@@ -117,6 +117,23 @@ class ServicesRepositoryPostgres(ServicesRepository):
         except SQLAlchemyError as e:
             db.rollback()
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        
+    def get_schedule_appointments(self, sportman_id: int, db: Session) -> List[ScheduleAppointmentResponseDTO]:
+        try:
+            service_sportman = db.query(ServiceSportman).filter(ServiceSportman.sportman_id == sportman_id).all()            
+            if service_sportman:
+                result = []
+                for ss in service_sportman:
+                    service_name = db.query(Service).filter(Service.id == ss.service_id).first().description
+                    sport = ss.sport
+                    appointment_date = ss.appointment_date
+                    
+                    result.append(ScheduleAppointmentResponseDTO(id=ss.id, sportman_id=ss.sportman_id, service_name=service_name, injury_id=ss.injury_id, sport=sport, appointment_date=appointment_date))
+                return result
+            else:
+                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service sportman not found")
+        except SQLAlchemyError as e:
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))    
 
     def create_notification(self, entity: Notification, db: Session) -> Notification:
         try:

@@ -1,6 +1,6 @@
 import pytest
 from httpx import Response
-from app.modules.services.domain.entities import Notification, Service
+from app.modules.services.domain.entities import Notification, Service, ServiceSportman
 from app.modules.third_party.domain.entities import ThirdParty
 
 
@@ -14,6 +14,13 @@ def third_party_seeders(db) -> None:
 def notification_seeders(db) -> None:
     db.add(Notification(message="Notificación de prueba", type="IALE", status="UNREAD"))
     db.commit()
+
+@pytest.fixture
+def appointments_seeders(db) -> None:
+    db.add(ServiceSportman(sportman_id=1, service_id=1, injury_id=1, sport="Ciclyn", appointment_date="2024-05-16" ))
+    db.add(ServiceSportman(sportman_id=2, service_id=2, injury_id=1, sport="Running", appointment_date="2024-05-16" ))
+    db.commit()
+
 
 
 
@@ -40,8 +47,6 @@ class TestCreateServiceRouter:
     def test_create_service(self, client, headers, third_party_seeders, service_data):
         service_created = create_service(client, service_data, headers)
         service_created_json = service_created.json()
-
-        print("service_created_json: ", service_created_json)
 
         assert service_created.status_code == 201
         assert "id" in service_created_json
@@ -81,13 +86,26 @@ class TestCreateServiceRouter:
             "appointment_date":  "2024-05-16" 
         }
         response = create_schedule_appointment(client, appointment_data, headers)
-        print("response", response)        
-        response_json = response.json()
-        print("response.json() ", response.json())
-
         assert response.status_code == 201
-        assert "id" in response_json
 
+    def test_get_schedule_appointment_no_data(self, client, headers, third_party_seeders):
+        sportman_id = 1
+        response = get_schedule_appointment(client, sportman_id, headers)
+        response_json = response.json()
+
+        assert response.status_code == 404        
+        assert "detail" in response_json
+
+    def test_get_schedule_appointment(self, client, headers, third_party_seeders, appointments_seeders):
+        sportman_id = 1
+        response = get_schedule_appointment(client, sportman_id, headers)
+        response_json = response.json()
+
+        assert response.status_code == 200
+        assert "appointment_date" in response_json[0]
+        assert "injury_id" in response_json[0]
+        assert "service_name" in response_json[0]
+        assert "id" in response_json[0]
 
     def test_create_notification(self, client, headers):
         notification_data = {
@@ -102,7 +120,6 @@ class TestCreateServiceRouter:
         assert response.status_code == 201
         assert "id" in response_json
 
-
     def test_get_notification_by_invalid_status_and_type(self, client, headers, notification_seeders):
         status = "INVALID"
         notification_type = "IALE"
@@ -111,7 +128,6 @@ class TestCreateServiceRouter:
 
         assert response.status_code == 404
         assert "detail" in response_json        
-
 
     def test_update_notification_status(self, client, headers, notification_seeders):
         
@@ -212,6 +228,15 @@ class TestDeactivateServiceRouter:
         assert response.status_code == 422
         assert "detail" in response.json()
 
+class TestOthersServiceRouter:        
+
+    def test_deactivate_service_with_invalid_id(self, client, headers):
+        service_id = "invalid_id"
+        response = deactivate_service(client, service_id, headers)
+
+        assert response.status_code == 422
+        assert "detail" in response.json()
+
 
 def create_service(client, data, headers) -> Response:
     service_created = client.post("/api/v1/auth/services", headers=headers, json=data)
@@ -250,6 +275,10 @@ def create_schedule_appointment(client, data, headers) -> Response:
     response = client.post("/api/v1/auth/services/appointment", headers=headers, json=data)
     return response 
 
+def get_schedule_appointment(client, sportman_id, headers) -> Response:
+    response = client.get(f"/api/v1/auth/services/appointment/{sportman_id}", headers=headers)
+    return response
+
 def create_notification(client, data, headers) -> Response:   
     response = client.post("/api/v1/auth/services/notification", headers=headers, json=data)
     return response 
@@ -261,6 +290,3 @@ def get_notification_by_status_and_type(client, status, type, headers) -> Respon
 def update_notification_status(client, data, headers) -> Response:
     response = client.put("/api/v1/auth/services/notification/user", headers=headers, json=data)
     return response
-
-
-    

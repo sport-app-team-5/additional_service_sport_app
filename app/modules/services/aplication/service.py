@@ -54,9 +54,14 @@ class ServicesService:
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.deactivate(service_id, db)
     
-    def create_schedule_appointment(self, appointment: ScheduleAppointmentRequestDTO, db: Session) -> ScheduleAppointmentResponseDTO:
+    def create_schedule_appointment(self, appointment: ScheduleAppointmentRequestDTO, db: Session):
         repository = self.repository_factory.create_object(ServicesRepository)
         return repository.create_scheduler_appointment(appointment, db)
+    
+    def get_schedule_appointments(self, sportman_id: int, db: Session) -> List[ScheduleAppointmentResponseDTO]:
+        repository = self.repository_factory.create_object(ServicesRepository)        
+        appointments = repository.get_schedule_appointments(sportman_id, db)
+        return appointments
     
     def create_notification(self, entity: NotificationRequestDTO, db: Session) -> NotificationResponseDTO:
         repository = self.repository_factory.create_object(ServicesRepository)
