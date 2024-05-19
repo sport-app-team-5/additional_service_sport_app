@@ -90,6 +90,8 @@ class EventResponseDTO(BaseModel):
     capacity: int
     description: str
     type: EventTypesEnum
+    time: Optional[str] = None
+    level: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 
