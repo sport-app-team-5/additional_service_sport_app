@@ -176,8 +176,9 @@ class TestGetServicesRouter:
     def test_get_services_empty(self, client, headers):
         service = get_services(client, headers)
 
-        assert service.status_code == 404
-        assert 'detail' in service.json()
+        assert service.status_code == 200
+        service_json = service.json()      
+        assert len(service_json) == 0, "Expected 'service.json()' to be an empty list"
 
     def test_get_service_by_type(self, client, headers, third_party_seeders):
         service_type = "SPORT_SPECIALIST"
