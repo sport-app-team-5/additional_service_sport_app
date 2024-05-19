@@ -93,8 +93,8 @@ class TestCreateServiceRouter:
         response = get_schedule_appointment(client, sportman_id, headers)
         response_json = response.json()
 
-        assert response.status_code == 404        
-        assert "detail" in response_json
+        assert response.status_code == 200        
+        assert len(response_json) == 0
 
     def test_get_schedule_appointment(self, client, headers, third_party_seeders, appointments_seeders):
         sportman_id = 1
