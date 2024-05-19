@@ -129,9 +129,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
                     appointment_date = ss.appointment_date
                     
                     result.append(ScheduleAppointmentResponseDTO(id=ss.id, sportman_id=ss.sportman_id, service_name=service_name, injury_id=ss.injury_id, sport=sport, appointment_date=appointment_date))
-                return result
-            else:
-                raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Service sportman not found")
+                return result            
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))    
 
