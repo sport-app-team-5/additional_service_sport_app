@@ -41,7 +41,7 @@ class ServicesRepositoryPostgres(ServicesRepository):
         except SQLAlchemyError as e:
             raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-    def get_all(self, is_inside_house: bool, db: Session) -> List[ServiceResponseDTO]:
+    def get_all_in_house(self, is_inside_house: bool, db: Session) -> List[ServiceResponseDTO]:
         try:
             if is_inside_house is not None:
                 services = db.query(Service).filter(Service.is_inside_house == is_inside_house,
