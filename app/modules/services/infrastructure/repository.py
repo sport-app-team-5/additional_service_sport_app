@@ -257,7 +257,7 @@ class EventRepositoryPostgres(EventRepository):
                     Event.date >= initial_date,
                     Event.date <= final_date,
                     #Event.city_id == city_id,
-                    ~exists().where(EventSportman.event_id == Event.id)             
+                    ~exists().where((EventSportman.event_id == Event.id) & (EventSportman.sportman_id == city_id))
             ).all()
 
             if available_events: 
@@ -272,7 +272,7 @@ class EventRepositoryPostgres(EventRepository):
             suscribed_events = db.query(Event).filter(
                     Event.date >= initial_date,
                     Event.date <= final_date,
-                    exists().where(EventSportman.event_id == Event.id and EventSportman.sportman_id == sportman_id)
+                    exists().where((EventSportman.event_id == Event.id) & (EventSportman.sportman_id == sportman_id))
             ).all()
 
             if suscribed_events: 
